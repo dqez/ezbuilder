@@ -604,7 +604,7 @@ export const NodeText = ({ text, fontSize, color }: any) => {
       onChange={(e) => setProp((props) => (props.text = e.target.value))}
       tagName="p"
       style={{ fontSize, color }}
-      className="p-2 hover:outline hover:outline-1 hover:outline-blue-400"
+      className="p-2 hover:outline hover:outline-blue-400"
     />
   );
 };

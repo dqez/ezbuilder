@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   UseGuards,
@@ -14,14 +15,18 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get('me')
-  me(@CurrentUser() user: RequestUser) {
-    return user; // {userId, role}
+  async me(@CurrentUser() user: RequestUser) {
+    const profile = await this.usersService.findById(user.userId);
+    if (!profile) {
+      throw new NotFoundException('User not found');
+    }
+    return profile;
   }
 
   @Patch('change-password')
