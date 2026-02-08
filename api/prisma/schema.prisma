@@ -1,0 +1,64 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  name      String?
+  role      String    @default("user")
+  avatarUrl String?   @map("avatar_url")
+  isActive  Boolean   @default(true) @map("is_active")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  websites  Website[]
+
+  @@map("users")
+}
+
+model Website {
+  id          String   @id @default(uuid())
+  name        String
+  subdomain   String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  pages       Page[]
+
+  @@index([userId])
+  @@index([subdomain])
+
+  @@map("websites")
+}
+
+model Page {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    // "home", "about", etc.
+  content     Json      // Craft.js serialized state
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  websiteId   String
+  website     Website   @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+
+  @@unique([websiteId, slug])
+  @@index([websiteId])
+
+  @@map("pages")
+}
