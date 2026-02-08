@@ -58,7 +58,6 @@ export class AuthService {
       const user = await this.usersService.createCredentialsUser({
         name: dto.name,
         email: dto.email,
-        phone: dto.phone,
         passwordHash,
       });
 
