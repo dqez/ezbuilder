@@ -31,6 +31,7 @@ export class PagesService {
         hidden: false,
         nodes: [],
         linkedNodes: {},
+        parent: null,
       },
     };
   }
