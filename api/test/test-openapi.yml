@@ -3,7 +3,7 @@ info:
   title: API Title
   version: '1.0'
 servers:
-  - url: http://localhost:3000/
+  - url: http://localhost:3001/api/v1/
 paths:
   /users/all:
     get:
@@ -14,6 +14,71 @@ paths:
     get:
       security:
         - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+  /users/change-password:
+    patch:
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        '200':
+          description: OK
+  /users/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '200':
+          description: OK
+    delete:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -48,6 +113,189 @@ paths:
                   type: string
                 password:
                   type: string
+      responses:
+        '200':
+          description: OK
+  /websites:
+    get:
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+    post:
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                subdomain:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Created
+  /websites/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                subdomain:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: OK
+    delete:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /pages:
+    post:
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - websiteId
+                - name
+                - slug
+              properties:
+                websiteId:
+                  type: string
+                  format: uuid
+                name:
+                  type: string
+                slug:
+                  type: string
+                content:
+                  type: object
+      responses:
+        '201':
+          description: Created
+  /pages/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    patch:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                slug:
+                  type: string
+                content:
+                  type: object
+      responses:
+        '200':
+          description: OK
+  /pages/{id}/publish:
+    post:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /pages/{id}/unpublish:
+    post:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /public/{subdomain}/{slug}:
+    get:
+      parameters:
+        - in: path
+          name: subdomain
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: slug
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK

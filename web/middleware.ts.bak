@@ -1,0 +1,71 @@
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+// List of paths that should not be rewritten
+const EXCLUDED_PATHS = [
+  "/api",
+  "/_next",
+  "/favicon.ico",
+  "/login",
+  "/register",
+  "/dashboard",
+  "/editor",
+  "/sites",
+  "/_sites",
+];
+
+function extractSubdomain(hostname: string): string | null {
+  // Local: minh.localhost:3000 → minh
+  // Prod: minh.ezbuilder.app → minh
+  const parts = hostname.split(".");
+
+  // Check for subdomain pattern
+  if (parts.length >= 2 && parts[1].includes("localhost")) {
+    // minh.localhost:3000
+    const subdomain = parts[0];
+    if (subdomain !== "www" && subdomain !== "localhost") {
+      return subdomain;
+    }
+  }
+
+  // Production pattern (3+ parts like minh.ezbuilder.app)
+  if (parts.length >= 3) {
+    const subdomain = parts[0];
+    if (subdomain !== "www" && subdomain !== "app") {
+      return subdomain;
+    }
+  }
+
+  return null;
+}
+
+export function middleware(request: NextRequest) {
+  const hostname = request.headers.get("host") || "";
+  const pathname = request.nextUrl.pathname;
+
+  // Skip API routes and static files
+  if (EXCLUDED_PATHS.some((path) => pathname.startsWith(path))) {
+    return NextResponse.next();
+  }
+
+  // Skip root path on main domain
+  if (pathname === "/" && !extractSubdomain(hostname)) {
+    return NextResponse.next();
+  }
+
+  // Extract subdomain
+  const subdomain = extractSubdomain(hostname);
+
+  if (subdomain) {
+    // Rewrite to the _sites/[subdomain] route
+    const url = new URL(`/_sites/${subdomain}${pathname}`, request.url);
+    return NextResponse.rewrite(url);
+  }
+
+  // Main domain - continue normally
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};

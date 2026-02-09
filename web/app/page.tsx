@@ -6,7 +6,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-linear-to-b from-background to-muted/30">
       {/* Header */}
-      <header className="container max-w-6xl py-6 flex items-center justify-between">
+      <header className="container mx-auto max-w-6xl py-6 flex items-center justify-between">
         <div className="font-bold text-xl">EZBuilder</div>
         <nav className="flex items-center gap-6">
           <Link
@@ -22,7 +22,7 @@ export default function HomePage() {
       </header>
 
       {/* Hero */}
-      <section className="container max-w-6xl py-24 text-center">
+      <section className="container mx-auto max-w-6xl py-24 text-center">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6">
           Build Websites
           <br />
@@ -46,7 +46,7 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="container max-w-6xl py-24">
+      <section className="container mx-auto max-w-6xl py-24">
         <h2 className="text-3xl font-bold text-center mb-12">
           Everything you need
         </h2>
@@ -84,7 +84,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="container max-w-6xl py-8 border-t">
+      <footer className="container mx-auto max-w-6xl py-8 border-t">
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <span>© 2026 EZBuilder. All rights reserved.</span>
           <div className="flex gap-6">

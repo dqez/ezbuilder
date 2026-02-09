@@ -31,6 +31,7 @@ export class PagesService {
         hidden: false,
         nodes: [],
         linkedNodes: {},
+        parent: null,
       },
     };
   }
@@ -158,6 +159,7 @@ export class PagesService {
         name: true,
         slug: true,
         content: true,
+        isPublished: true,
         publishedAt: true,
         website: {
           select: {
