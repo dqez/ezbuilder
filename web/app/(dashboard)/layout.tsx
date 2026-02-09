@@ -44,7 +44,7 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-muted/30">
       {/* Header */}
       <header className="bg-background border-b sticky top-0 z-50">
-        <div className="container max-w-7xl h-14 flex items-center justify-between">
+        <div className="container mx-auto max-w-7xl h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/dashboard" className="font-bold text-lg">
               EZBuilder
@@ -73,7 +73,7 @@ export default function DashboardLayout({
       </header>
 
       {/* Main Content */}
-      <main className="container max-w-7xl py-8">{children}</main>
+      <main className="container mx-auto max-w-7xl py-8">{children}</main>
     </div>
   );
 }

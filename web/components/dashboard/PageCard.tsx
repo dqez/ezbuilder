@@ -62,7 +62,7 @@ export function PageCard({ page, subdomain }: PageCardProps) {
           {page.isPublished && (
             <Button asChild variant="ghost" size="sm">
               <a
-                href={`http://${subdomain}.localhost:3000/${page.slug}`}
+                href={`/public/${subdomain}/${page.slug}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >

@@ -4,16 +4,21 @@ import { Editor, Frame } from "@craftjs/core";
 import { resolver } from "@/components/editor/components";
 
 interface PublicRendererProps {
-  content: string; // Serialized JSON from Craft.js
+  content: Record<string, unknown> | string; // Support both object and serialized string
 }
 
 export const PublicRenderer = ({ content }: PublicRendererProps) => {
+  const jsonContent =
+    typeof content === "string" ? content : JSON.stringify(content);
+
   return (
     <Editor
       resolver={resolver}
       enabled={false} // Disable editing
     >
-      <Frame json={content}>{/* Content will be rendered from JSON */}</Frame>
+      <Frame json={jsonContent}>
+        {/* Content will be rendered from JSON */}
+      </Frame>
     </Editor>
   );
 };

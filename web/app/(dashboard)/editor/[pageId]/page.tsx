@@ -142,6 +142,33 @@ function EditorContent({
     };
   }, [query, onSave]);
 
+  // Keyboard shortcuts for undo/redo
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      // Undo: Ctrl+Z (Windows) or Cmd+Z (Mac)
+      if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
+        e.preventDefault();
+        if (query.history.canUndo()) {
+          actions.history.undo();
+        }
+      }
+
+      // Redo: Ctrl+Y (Windows) or Cmd+Shift+Z (Mac/Windows)
+      if (
+        ((e.ctrlKey || e.metaKey) && e.key === "y") ||
+        ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "z")
+      ) {
+        e.preventDefault();
+        if (query.history.canRedo()) {
+          actions.history.redo();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
+  }, [actions, query]);
+
   return (
     <main className="flex-1 overflow-auto p-8">
       <div className="min-h-full flex items-start justify-center">
