@@ -13,6 +13,9 @@ interface NodeColumnsProps {
   borderColor?: string;
   boxShadow?: string;
   backgroundImage?: string;
+  animation?: string;
+  mobilePadding?: number;
+  mobileGap?: number;
 }
 
 export const NodeColumns = ({
@@ -25,6 +28,9 @@ export const NodeColumns = ({
   borderColor = "transparent",
   boxShadow = "none",
   backgroundImage = "",
+  animation = "",
+  mobilePadding,
+  mobileGap,
 }: NodeColumnsProps) => {
   const {
     connectors: { connect, drag },
@@ -33,24 +39,32 @@ export const NodeColumns = ({
     selected: node.events.selected,
   }));
 
+  const mPadding = mobilePadding !== undefined ? mobilePadding : padding;
+  const mGap = mobileGap !== undefined ? mobileGap : gap;
+
   return (
     <div
       ref={(ref) => {
         if (ref) connect(drag(ref));
       }}
-      className="w-full flex flex-col md:flex-row"
-      style={{
-        gap: `${gap}px`,
-        padding: `${padding}px`,
-        backgroundColor,
-        backgroundImage,
-        borderRadius: `${borderRadius}px`,
-        border: `${borderWidth}px solid ${borderColor}`,
-        boxShadow,
-        outline: selected ? "2px solid #3b82f6" : "none",
-        outlineOffset: "2px",
-        minHeight: "100px",
-      }}
+      className={`w-full flex flex-col md:flex-row ${animation} p-(--p-mobile) md:p-(--p-desktop) gap-(--g-mobile) md:gap-(--g-desktop)`}
+      style={
+        {
+          // gap/padding handled by class vars
+          "--p-desktop": `${padding}px`,
+          "--p-mobile": `${mPadding}px`,
+          "--g-desktop": `${gap}px`,
+          "--g-mobile": `${mGap}px`,
+          backgroundColor,
+          backgroundImage,
+          borderRadius: `${borderRadius}px`,
+          border: `${borderWidth}px solid ${borderColor}`,
+          boxShadow,
+          outline: selected ? "2px solid #3b82f6" : "none",
+          outlineOffset: "2px",
+          minHeight: "100px",
+        } as React.CSSProperties
+      }
     >
       {Array.from({ length: columns }).map((_, index) => (
         <div

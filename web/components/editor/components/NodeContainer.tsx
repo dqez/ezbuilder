@@ -15,6 +15,9 @@ export interface NodeContainerProps {
   borderColor?: string;
   boxShadow?: string;
   backgroundImage?: string;
+  animation?: string;
+  mobilePadding?: number;
+  mobileGap?: number;
   children?: React.ReactNode;
 }
 
@@ -30,6 +33,9 @@ export const NodeContainer = ({
   borderColor = "transparent",
   boxShadow = "none",
   backgroundImage = "",
+  animation = "",
+  mobilePadding,
+  mobileGap,
   children,
 }: NodeContainerProps) => {
   const {
@@ -39,28 +45,37 @@ export const NodeContainer = ({
     selected: node.events.selected,
   }));
 
+  const mPadding = mobilePadding !== undefined ? mobilePadding : padding;
+  const mGap = mobileGap !== undefined ? mobileGap : gap;
+
   return (
     <div
       ref={(ref) => {
         if (ref) connect(drag(ref));
       }}
-      style={{
-        display: "flex",
-        flexDirection,
-        gap: `${gap}px`,
-        padding: `${padding}px`,
-        backgroundColor,
-        backgroundImage,
-        width,
-        height,
-        minHeight: "100px",
-        outline: selected ? "2px solid #3b82f6" : "2px dashed #e5e7eb",
-        outlineOffset: "2px",
-        borderRadius: `${borderRadius}px`,
-        border: `${borderWidth}px solid ${borderColor}`,
-        boxShadow,
-        cursor: "grab",
-      }}
+      className={`${animation} p-(--p-mobile) md:p-(--p-desktop) gap-(--g-mobile) md:gap-(--g-desktop)`}
+      style={
+        {
+          display: "flex",
+          flexDirection,
+          // Gap and Padding are handled via classes and vars now
+          "--p-desktop": `${padding}px`,
+          "--p-mobile": `${mPadding}px`,
+          "--g-desktop": `${gap}px`,
+          "--g-mobile": `${mGap}px`,
+          backgroundColor,
+          backgroundImage,
+          width,
+          height,
+          minHeight: "100px",
+          outline: selected ? "2px solid #3b82f6" : "2px dashed #e5e7eb",
+          outlineOffset: "2px",
+          borderRadius: `${borderRadius}px`,
+          border: `${borderWidth}px solid ${borderColor}`,
+          boxShadow,
+          cursor: "grab",
+        } as React.CSSProperties
+      }
     >
       {children}
     </div>

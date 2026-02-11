@@ -1480,6 +1480,74 @@ export const SettingsPanel = () => {
               </p>
             </div>
           )}
+
+          {/* Responsive Settings */}
+          {["Container", "Grid", "Columns"].includes(selected.name) && (
+            <>
+              <Separator className="my-4" />
+              <h4 className="font-medium text-sm mb-3">Mobile Overrides</h4>
+              <div className="space-y-2">
+                <Label htmlFor="mobilePadding">Mobile Padding (px)</Label>
+                <Input
+                  id="mobilePadding"
+                  type="number"
+                  value={
+                    selected.props.mobilePadding || selected.props.padding || 0
+                  }
+                  onChange={(e) =>
+                    handlePropChange("mobilePadding", parseInt(e.target.value))
+                  }
+                  placeholder="Inherit"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="mobileGap">Mobile Gap (px)</Label>
+                <Input
+                  id="mobileGap"
+                  type="number"
+                  value={selected.props.mobileGap || selected.props.gap || 0}
+                  onChange={(e) =>
+                    handlePropChange("mobileGap", parseInt(e.target.value))
+                  }
+                  placeholder="Inherit"
+                />
+              </div>
+            </>
+          )}
+
+          {/* Animation Settings */}
+          {[
+            "Container",
+            "Grid",
+            "Columns",
+            "Text",
+            "Heading",
+            "Image",
+            "Card",
+          ].includes(selected.name) && (
+            <>
+              <Separator className="my-4" />
+              <h4 className="font-medium text-sm mb-3">Animation</h4>
+              <div className="space-y-2">
+                <Label htmlFor="animation">Entrance Animation</Label>
+                <select
+                  id="animation"
+                  value={selected.props.animation || ""}
+                  onChange={(e) =>
+                    handlePropChange("animation", e.target.value)
+                  }
+                  className="w-full h-9 px-3 rounded-md border border-input bg-transparent text-sm"
+                >
+                  <option value="">None</option>
+                  <option value="animate-fade-in">Fade In</option>
+                  <option value="animate-slide-up">Slide Up</option>
+                  <option value="animate-slide-right">Slide Right</option>
+                  <option value="animate-zoom-in">Zoom In</option>
+                  <option value="animate-bounce-in">Bounce In</option>
+                </select>
+              </div>
+            </>
+          )}
         </TabsContent>
       </Tabs>
     </div>

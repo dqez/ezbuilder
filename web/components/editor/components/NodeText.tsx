@@ -13,6 +13,7 @@ interface NodeTextProps {
   lineHeight?: number;
   marginTop?: number;
   marginBottom?: number;
+  animation?: string;
 }
 
 export const NodeText = ({
@@ -25,6 +26,7 @@ export const NodeText = ({
   lineHeight = 1.5,
   marginTop = 0,
   marginBottom = 0,
+  animation = "",
 }: NodeTextProps) => {
   const {
     connectors: { connect, drag },
@@ -55,6 +57,7 @@ export const NodeText = ({
       ref={(ref) => {
         if (ref) connect(drag(ref));
       }}
+      className={animation}
       onDoubleClick={handleDoubleClick}
       onBlur={handleBlur}
       contentEditable={isEditing}
