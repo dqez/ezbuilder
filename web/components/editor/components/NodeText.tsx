@@ -8,6 +8,12 @@ interface NodeTextProps {
   fontSize: number;
   color: string;
   textAlign: "left" | "center" | "right";
+  fontWeight?: string;
+  fontFamily?: string;
+  lineHeight?: number;
+  marginTop?: number;
+  marginBottom?: number;
+  animation?: string;
 }
 
 export const NodeText = ({
@@ -15,6 +21,12 @@ export const NodeText = ({
   fontSize = 16,
   color = "#000000",
   textAlign = "left",
+  fontWeight = "400",
+  fontFamily = "inherit",
+  lineHeight = 1.5,
+  marginTop = 0,
+  marginBottom = 0,
+  animation = "",
 }: NodeTextProps) => {
   const {
     connectors: { connect, drag },
@@ -45,6 +57,7 @@ export const NodeText = ({
       ref={(ref) => {
         if (ref) connect(drag(ref));
       }}
+      className={animation}
       onDoubleClick={handleDoubleClick}
       onBlur={handleBlur}
       contentEditable={isEditing}
@@ -53,8 +66,12 @@ export const NodeText = ({
         fontSize: `${fontSize}px`,
         color,
         textAlign,
+        fontWeight,
+        fontFamily,
+        lineHeight,
+        marginTop: `${marginTop}px`,
+        marginBottom: `${marginBottom}px`,
         padding: "8px",
-        margin: 0,
         outline: selected ? "2px solid #3b82f6" : "none",
         outlineOffset: "2px",
         borderRadius: "4px",

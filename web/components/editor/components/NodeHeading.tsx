@@ -8,6 +8,12 @@ interface NodeHeadingProps {
   level: 1 | 2 | 3;
   color: string;
   textAlign: "left" | "center" | "right";
+  fontWeight?: string;
+  fontFamily?: string;
+  lineHeight?: number;
+  marginTop?: number;
+  marginBottom?: number;
+  animation?: string;
 }
 
 export const NodeHeading = ({
@@ -15,6 +21,12 @@ export const NodeHeading = ({
   level = 1,
   color = "#000000",
   textAlign = "left",
+  fontWeight,
+  fontFamily = "inherit",
+  lineHeight = 1.2,
+  marginTop = 0,
+  marginBottom = 0,
+  animation = "",
 }: NodeHeadingProps) => {
   const {
     connectors: { connect, drag },
@@ -25,6 +37,8 @@ export const NodeHeading = ({
   }));
 
   const [isEditing, setIsEditing] = useState(false);
+
+  // ... (useCallback)
 
   const handleDoubleClick = useCallback(() => {
     setIsEditing(true);
@@ -40,23 +54,31 @@ export const NodeHeading = ({
     [setProp],
   );
 
-  const fontSize = level === 1 ? 36 : level === 2 ? 28 : 22;
-  const fontWeight = level === 1 ? 700 : level === 2 ? 600 : 500;
+  const defaultFontSize = level === 1 ? 36 : level === 2 ? 28 : 22;
+  const defaultFontWeight = level === 1 ? "700" : level === 2 ? "600" : "500";
+
+  const finalFontWeight = fontWeight || defaultFontWeight;
 
   const HeadingTag = level === 1 ? "h1" : level === 2 ? "h2" : "h3";
+  const Tag = level === 1 ? "h1" : level === 2 ? "h2" : "h3";
 
   return (
-    <HeadingTag
-      ref={(ref) => {
-        if (ref) connect(drag(ref as HTMLElement));
+    <Tag
+      ref={(ref: any) => {
+        if (ref) connect(drag(ref));
       }}
+      className={animation}
       onDoubleClick={handleDoubleClick}
       onBlur={handleBlur}
       contentEditable={isEditing}
       suppressContentEditableWarning
       style={{
-        fontSize: `${fontSize}px`,
-        fontWeight,
+        fontSize: `${defaultFontSize}px`,
+        fontWeight: finalFontWeight,
+        fontFamily,
+        lineHeight,
+        marginTop: `${marginTop}px`,
+        marginBottom: `${marginBottom}px`,
         color,
         textAlign,
         padding: "8px",
@@ -69,7 +91,7 @@ export const NodeHeading = ({
       }}
     >
       {text}
-    </HeadingTag>
+    </Tag>
   );
 };
 

@@ -1,15 +1,13 @@
 "use client";
 
-import { useNode } from "@craftjs/core";
-import React from "react";
+import { useNode, Element } from "@craftjs/core";
+import { NodeContainer } from "./NodeContainer";
 
-export interface NodeContainerProps {
-  padding?: number;
-  backgroundColor?: string;
-  flexDirection?: "row" | "column";
-  gap?: number;
-  width?: string;
-  height?: string;
+interface NodeColumnsProps {
+  columns: number;
+  gap: number;
+  padding: number;
+  backgroundColor: string;
   borderRadius?: number;
   borderWidth?: number;
   borderColor?: string;
@@ -18,17 +16,14 @@ export interface NodeContainerProps {
   animation?: string;
   mobilePadding?: number;
   mobileGap?: number;
-  children?: React.ReactNode;
 }
 
-export const NodeContainer = ({
+export const NodeColumns = ({
+  columns = 2,
+  gap = 16,
   padding = 16,
   backgroundColor = "transparent",
-  flexDirection = "column",
-  gap = 8,
-  width = "100%",
-  height = "auto",
-  borderRadius = 8,
+  borderRadius = 0,
   borderWidth = 0,
   borderColor = "transparent",
   boxShadow = "none",
@@ -36,8 +31,7 @@ export const NodeContainer = ({
   animation = "",
   mobilePadding,
   mobileGap,
-  children,
-}: NodeContainerProps) => {
+}: NodeColumnsProps) => {
   const {
     connectors: { connect, drag },
     selected,
@@ -53,49 +47,53 @@ export const NodeContainer = ({
       ref={(ref) => {
         if (ref) connect(drag(ref));
       }}
-      className={`${animation} p-(--p-mobile) md:p-(--p-desktop) gap-(--g-mobile) md:gap-(--g-desktop)`}
+      className={`w-full flex flex-col md:flex-row ${animation} p-(--p-mobile) md:p-(--p-desktop) gap-(--g-mobile) md:gap-(--g-desktop)`}
       style={
         {
-          display: "flex",
-          flexDirection,
-          // Gap and Padding are handled via classes and vars now
+          // gap/padding handled by class vars
           "--p-desktop": `${padding}px`,
           "--p-mobile": `${mPadding}px`,
           "--g-desktop": `${gap}px`,
           "--g-mobile": `${mGap}px`,
           backgroundColor,
           backgroundImage,
-          width,
-          height,
-          minHeight: "100px",
-          outline: selected ? "2px solid #3b82f6" : "2px dashed #e5e7eb",
-          outlineOffset: "2px",
           borderRadius: `${borderRadius}px`,
           border: `${borderWidth}px solid ${borderColor}`,
           boxShadow,
-          cursor: "grab",
+          outline: selected ? "2px solid #3b82f6" : "none",
+          outlineOffset: "2px",
+          minHeight: "100px",
         } as React.CSSProperties
       }
     >
-      {children}
+      {Array.from({ length: columns }).map((_, index) => (
+        <div
+          key={index}
+          className="flex-1 w-full md:w-auto h-full min-h-[50px]"
+        >
+          <Element
+            canvas
+            id={`column-${index}`}
+            is={NodeContainer}
+            padding={8}
+            backgroundColor="#f9fafb"
+            flexDirection="column"
+            width="100%"
+            height="100%"
+          />
+        </div>
+      ))}
     </div>
   );
 };
 
-NodeContainer.craft = {
-  displayName: "Container",
+NodeColumns.craft = {
+  displayName: "Columns",
   props: {
+    columns: 2,
+    gap: 16,
     padding: 16,
     backgroundColor: "transparent",
-    borderRadius: 8,
-    borderWidth: 0,
-    borderColor: "transparent",
-    boxShadow: "none",
-    flexDirection: "column",
-    gap: 8,
-  },
-  rules: {
-    canDrag: () => true,
   },
   related: {},
 };

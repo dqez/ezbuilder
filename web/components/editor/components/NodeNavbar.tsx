@@ -11,6 +11,8 @@ interface NavLink {
 interface NodeNavbarProps {
   logo: string;
   links: NavLink[];
+  variant?: "default" | "centered" | "minimal";
+  sticky?: boolean;
 }
 
 export const NodeNavbar = ({
@@ -21,6 +23,8 @@ export const NodeNavbar = ({
     { label: "Services", url: "#" },
     { label: "Contact", url: "#" },
   ],
+  variant = "default",
+  sticky = false,
 }: NodeNavbarProps) => {
   const {
     connectors: { connect, drag },
@@ -29,45 +33,64 @@ export const NodeNavbar = ({
     selected: node.events.selected,
   }));
 
+  const isCentered = variant === "centered";
+  const isMinimal = variant === "minimal";
+
   return (
     <nav
       ref={(ref) => {
         if (ref) connect(drag(ref));
       }}
+      className={`w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 px-6 py-4 flex items-center transition-all duration-200 ${
+        sticky ? "sticky top-0 z-50 shadow-sm" : "relative"
+      } ${
+        isCentered
+          ? "flex-col gap-4 md:flex-col justify-center"
+          : "justify-between"
+      }`}
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "16px 32px",
-        backgroundColor: "#ffffff",
-        borderBottom: "1px solid #e5e7eb",
         outline: selected ? "2px solid #3b82f6" : "none",
         outlineOffset: "2px",
         cursor: "grab",
-        borderRadius: "8px",
       }}
     >
-      <div style={{ fontWeight: 700, fontSize: "20px", color: "#0f172a" }}>
+      {/* Logo */}
+      <div
+        className={`font-bold text-xl text-slate-900 tracking-tight ${isCentered ? "mb-2" : ""}`}
+      >
         {logo}
       </div>
-      <div style={{ display: "flex", gap: "24px", alignItems: "center" }}>
-        {links.map((link, index) => (
-          <a
-            key={index}
-            href={link.url}
-            onClick={(e) => e.preventDefault()}
-            style={{
-              color: "#475569",
-              textDecoration: "none",
-              fontSize: "14px",
-              fontWeight: 500,
-            }}
-          >
-            {link.label}
-          </a>
-        ))}
-        <Button size="sm">Sign Up</Button>
-      </div>
+
+      {/* Links - Hidden on Minimal, or different layout */}
+      {!isMinimal && (
+        <div
+          className={`flex gap-6 items-center ${isCentered ? "justify-center w-full" : ""}`}
+        >
+          {links.map((link, index) => (
+            <a
+              key={index}
+              href={link.url}
+              onClick={(e) => e.preventDefault()}
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              {link.label}
+            </a>
+          ))}
+          <Button size="sm" variant={isCentered ? "outline" : "default"}>
+            Sign Up
+          </Button>
+        </div>
+      )}
+
+      {/* Minimal Variant - Just Button? */}
+      {isMinimal && (
+        <div className="flex gap-4">
+          <Button size="sm" variant="ghost">
+            Log in
+          </Button>
+          <Button size="sm">Get Started</Button>
+        </div>
+      )}
     </nav>
   );
 };
@@ -82,6 +105,8 @@ NodeNavbar.craft = {
       { label: "Services", url: "#" },
       { label: "Contact", url: "#" },
     ],
+    variant: "default",
+    sticky: false,
   },
   related: {},
 };
