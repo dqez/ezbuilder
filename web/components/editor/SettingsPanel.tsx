@@ -41,8 +41,76 @@ export const SettingsPanel = () => {
 
   if (!selected) {
     return (
-      <div className="p-4 text-center text-muted-foreground">
-        <p className="text-sm">Click on a component to edit its properties</p>
+      <div className="p-4 space-y-6">
+        <div>
+          <h3 className="font-medium mb-1">Global Settings</h3>
+          <p className="text-sm text-muted-foreground">
+            Customize your site&apos;s theme and styles.
+          </p>
+        </div>
+        <Separator />
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>Theme Color (Primary)</Label>
+            <div className="flex gap-2">
+              <Input
+                type="color"
+                className="w-12 h-10 p-1 cursor-pointer"
+                onChange={(e) => {
+                  // This is a naive implementation for OKLCH or HSL.
+                  // CSS variables in globals.css might be complex.
+                  // For now, let's try setting --primary directly to hex?
+                  // Tailwind v4 uses --color-primary: <color>.
+                  // But globals.css uses oklch.
+                  // If I set --primary: #hex, it overrides oklch if defined via @theme?
+                  // No, @theme maps --color-primary to var(--primary).
+                  // So setting --primary on :root works.
+                  document.documentElement.style.setProperty(
+                    "--primary",
+                    e.target.value,
+                  );
+                  document.documentElement.style.setProperty(
+                    "--ring",
+                    e.target.value,
+                  );
+                }}
+              />
+              <span className="text-xs text-muted-foreground self-center">
+                Click color picker
+              </span>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Radius (rem)</Label>
+            <Input
+              type="number"
+              step="0.1"
+              defaultValue={0.5}
+              onChange={(e) => {
+                document.documentElement.style.setProperty(
+                  "--radius",
+                  `${e.target.value}rem`,
+                );
+              }}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Base Font Size</Label>
+            <select
+              className="w-full h-9 px-3 rounded-md border border-input bg-transparent text-sm"
+              onChange={(e) => {
+                document.documentElement.style.fontSize = e.target.value;
+              }}
+            >
+              <option value="16px">16px (Default)</option>
+              <option value="14px">14px (Compact)</option>
+              <option value="18px">18px (Large)</option>
+            </select>
+          </div>
+        </div>
       </div>
     );
   }
@@ -140,6 +208,22 @@ export const SettingsPanel = () => {
                   <option value="secondary">Secondary</option>
                   <option value="outline">Outline</option>
                   <option value="ghost">Ghost</option>
+                  <option value="link">Link</option>
+                  <option value="destructive">Destructive</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="size">Size</Label>
+                <select
+                  id="size"
+                  value={selected.props.size || "default"}
+                  onChange={(e) => handlePropChange("size", e.target.value)}
+                  className="w-full h-9 px-3 rounded-md border border-input bg-transparent text-sm"
+                >
+                  <option value="default">Default</option>
+                  <option value="sm">Small</option>
+                  <option value="lg">Large</option>
+                  <option value="icon">Icon</option>
                 </select>
               </div>
             </>
@@ -172,6 +256,66 @@ export const SettingsPanel = () => {
                   onChange={(e) => handlePropChange("ctaText", e.target.value)}
                 />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="ctaUrl">CTA URL</Label>
+                <Input
+                  id="ctaUrl"
+                  value={selected.props.ctaUrl || "#"}
+                  onChange={(e) => handlePropChange("ctaUrl", e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="layout">Layout</Label>
+                <select
+                  id="layout"
+                  value={selected.props.layout || "center"}
+                  onChange={(e) => handlePropChange("layout", e.target.value)}
+                  className="w-full h-9 px-3 rounded-md border border-input bg-transparent text-sm"
+                >
+                  <option value="center">Center (Background)</option>
+                  <option value="split-left">Split Left (Image Left)</option>
+                  <option value="split-right">
+                    Split Right (Content Left)
+                  </option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="backgroundImage">Background Image URL</Label>
+                <Input
+                  id="backgroundImage"
+                  value={selected.props.backgroundImage || ""}
+                  onChange={(e) =>
+                    handlePropChange("backgroundImage", e.target.value)
+                  }
+                  placeholder="https://..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="imageUrl">Side Image URL (Split)</Label>
+                <Input
+                  id="imageUrl"
+                  value={selected.props.imageUrl || ""}
+                  onChange={(e) => handlePropChange("imageUrl", e.target.value)}
+                  placeholder="https://..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="overlayOpacity">Overlay Opacity (0-1)</Label>
+                <Input
+                  id="overlayOpacity"
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="1"
+                  value={selected.props.overlayOpacity || 0.5}
+                  onChange={(e) =>
+                    handlePropChange(
+                      "overlayOpacity",
+                      parseFloat(e.target.value),
+                    )
+                  }
+                />
+              </div>
             </>
           )}
 
@@ -196,31 +340,97 @@ export const SettingsPanel = () => {
                   }
                 />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="cardImageUrl">Image URL</Label>
+                <Input
+                  id="cardImageUrl"
+                  value={selected.props.imageUrl || ""}
+                  onChange={(e) => handlePropChange("imageUrl", e.target.value)}
+                  placeholder="https://..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="cardVariant">Variant</Label>
+                <select
+                  id="cardVariant"
+                  value={selected.props.variant || "vertical"}
+                  onChange={(e) => handlePropChange("variant", e.target.value)}
+                  className="w-full h-9 px-3 rounded-md border border-input bg-transparent text-sm"
+                >
+                  <option value="vertical">Vertical</option>
+                  <option value="horizontal">Horizontal</option>
+                  <option value="overlay">Overlay</option>
+                </select>
+              </div>
             </>
           )}
 
           {/* Navbar Logo */}
           {selected.name === "Navbar" && (
-            <div className="space-y-2">
-              <Label htmlFor="logo">Logo Text</Label>
-              <Input
-                id="logo"
-                value={selected.props.logo || ""}
-                onChange={(e) => handlePropChange("logo", e.target.value)}
-              />
-            </div>
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="logo">Logo Text</Label>
+                <Input
+                  id="logo"
+                  value={selected.props.logo || ""}
+                  onChange={(e) => handlePropChange("logo", e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="navbarVariant">Variant</Label>
+                <select
+                  id="navbarVariant"
+                  value={selected.props.variant || "default"}
+                  onChange={(e) => handlePropChange("variant", e.target.value)}
+                  className="w-full h-9 px-3 rounded-md border border-input bg-transparent text-sm"
+                >
+                  <option value="default">Default (Logo Left)</option>
+                  <option value="centered">Centered (Logo Center)</option>
+                  <option value="minimal">Minimal (Logo + Button)</option>
+                </select>
+              </div>
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="navbarSticky"
+                  checked={selected.props.sticky || false}
+                  onChange={(e) => handlePropChange("sticky", e.target.checked)}
+                  className="w-4 h-4 accent-primary"
+                />
+                <Label htmlFor="navbarSticky" className="cursor-pointer">
+                  Sticky Top
+                </Label>
+              </div>
+            </>
           )}
 
           {/* Footer Copyright */}
           {selected.name === "Footer" && (
-            <div className="space-y-2">
-              <Label htmlFor="copyright">Copyright Text</Label>
-              <Input
-                id="copyright"
-                value={selected.props.copyright || ""}
-                onChange={(e) => handlePropChange("copyright", e.target.value)}
-              />
-            </div>
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="copyright">Copyright Text</Label>
+                <Input
+                  id="copyright"
+                  value={selected.props.copyright || ""}
+                  onChange={(e) =>
+                    handlePropChange("copyright", e.target.value)
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="footerVariant">Variant</Label>
+                <select
+                  id="footerVariant"
+                  value={selected.props.variant || "simple"}
+                  onChange={(e) => handlePropChange("variant", e.target.value)}
+                  className="w-full h-9 px-3 rounded-md border border-input bg-transparent text-sm"
+                >
+                  <option value="simple">Simple (Row)</option>
+                  <option value="centered">Centered (Column)</option>
+                  <option value="minimal">Minimal (Copyright Only)</option>
+                </select>
+              </div>
+            </>
           )}
 
           {/* Spacer Height */}
