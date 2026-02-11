@@ -14,6 +14,23 @@ import {
   Navigation,
   CircleArrowDown,
   LayoutGrid,
+  TextQuote,
+  Tv,
+  Code,
+  RectangleHorizontal,
+  AlignLeft,
+  List,
+  CheckSquare,
+  Grid,
+  Columns as ColumnsIcon,
+  ListCollapse, // For Accordion
+  PanelTop, // For Tabs
+  UserCircle2, // Testimonial
+  BadgeDollarSign, // Pricing
+  Megaphone, // CTA
+  BarChart3, // Stats
+  ListChecks, // Features
+  Share2, // Social
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -29,6 +46,25 @@ import { NodeHero } from "./components/NodeHero";
 import { NodeNavbar } from "./components/NodeNavbar";
 import { NodeFooter } from "./components/NodeFooter";
 import { NodeGallery } from "./components/NodeGallery";
+import { NodeRichText } from "./components/NodeRichText";
+import { NodeVideo } from "./components/NodeVideo";
+import { NodeIcon } from "./components/NodeIcon";
+import { NodeEmbed } from "./components/NodeEmbed";
+import { NodeForm } from "./components/NodeForm";
+import { NodeInput } from "./components/NodeInput";
+import { NodeTextarea } from "./components/NodeTextarea";
+import { NodeSelect } from "./components/NodeSelect";
+import { NodeCheckbox } from "./components/NodeCheckbox";
+import { NodeGrid } from "./components/NodeGrid";
+import { NodeColumns } from "./components/NodeColumns";
+import { NodeAccordion } from "./components/NodeAccordion";
+import { NodeTabs } from "./components/NodeTabs";
+import { NodeTestimonial } from "./components/NodeTestimonial";
+import { NodePricing } from "./components/NodePricing";
+import { NodeCTA } from "./components/NodeCTA";
+import { NodeStats } from "./components/NodeStats";
+import { NodeFeatureList } from "./components/NodeFeatureList";
+import { NodeSocialIcons } from "./components/NodeSocialIcons";
 
 interface ToolboxItemProps {
   label: string;
@@ -104,6 +140,126 @@ export const Toolbox = () => {
 
       <Separator className="my-3" />
 
+      {/* Text & Media */}
+      <div className="px-2 py-1.5">
+        <span className="text-xs font-medium text-muted-foreground">
+          Text & Media
+        </span>
+      </div>
+      <ToolboxItem
+        label="Rich Text"
+        icon={<TextQuote className="w-4 h-4" />}
+        element={
+          <NodeRichText
+            text="Edit this rich text"
+            fontSize={16}
+            color="#000000"
+            textAlign="left"
+            fontWeight={400}
+          />
+        }
+      />
+      <ToolboxItem
+        label="Video"
+        icon={<Tv className="w-4 h-4" />}
+        element={
+          <NodeVideo url="" autoplay={false} muted={false} aspectRatio="16:9" />
+        }
+      />
+      <ToolboxItem
+        label="Icon"
+        icon={<Sparkles className="w-4 h-4" />}
+        element={
+          <NodeIcon
+            iconName="Star"
+            size={24}
+            color="#000000"
+            backgroundColor="transparent"
+            borderRadius={0}
+            padding={8}
+          />
+        }
+      />
+      <ToolboxItem
+        label="Embed"
+        icon={<Code className="w-4 h-4" />}
+        element={<NodeEmbed embedCode="" width="100%" height="400px" />}
+      />
+
+      <Separator className="my-3" />
+
+      {/* Form Components */}
+      <div className="px-2 py-1.5">
+        <span className="text-xs font-medium text-muted-foreground">Forms</span>
+      </div>
+      <ToolboxItem
+        label="Form Wrapper"
+        icon={<RectangleHorizontal className="w-4 h-4" />}
+        element={
+          <NodeForm
+            padding={16}
+            gap={16}
+            backgroundColor="transparent"
+            borderColor="transparent"
+            borderWidth={0}
+            borderRadius={0}
+          />
+        }
+      />
+      <ToolboxItem
+        label="Input"
+        icon={<Type className="w-4 h-4" />}
+        element={
+          <NodeInput
+            label="Input Label"
+            placeholder="Type here..."
+            inputType="text"
+            required={false}
+            name="input"
+          />
+        }
+      />
+      <ToolboxItem
+        label="Textarea"
+        icon={<AlignLeft className="w-4 h-4" />}
+        element={
+          <NodeTextarea
+            label="Message"
+            placeholder="Type your message..."
+            rows={4}
+            required={false}
+            name="message"
+          />
+        }
+      />
+      <ToolboxItem
+        label="Select"
+        icon={<List className="w-4 h-4" />}
+        element={
+          <NodeSelect
+            label="Select Option"
+            placeholder="Choose one..."
+            options="Option 1, Option 2, Option 3"
+            required={false}
+            name="select"
+          />
+        }
+      />
+      <ToolboxItem
+        label="Checkbox"
+        icon={<CheckSquare className="w-4 h-4" />}
+        element={
+          <NodeCheckbox
+            label="I agree"
+            required={false}
+            name="checkbox"
+            defaultChecked={false}
+          />
+        }
+      />
+
+      <Separator className="my-3" />
+
       {/* Layout Components */}
       <div className="px-2 py-1.5">
         <span className="text-xs font-medium text-muted-foreground">
@@ -133,6 +289,115 @@ export const Toolbox = () => {
         label="Divider"
         icon={<Minus className="w-4 h-4" />}
         element={<NodeDivider color="#e5e7eb" thickness={1} margin={16} />}
+      />
+      <ToolboxItem
+        label="Grid"
+        icon={<Grid className="w-4 h-4" />}
+        element={
+          <NodeGrid
+            columns={3}
+            gap={16}
+            padding={16}
+            backgroundColor="transparent"
+          />
+        }
+      />
+      <ToolboxItem
+        label="Columns"
+        icon={<ColumnsIcon className="w-4 h-4" />}
+        element={
+          <NodeColumns
+            columns={2}
+            gap={16}
+            padding={16}
+            backgroundColor="transparent"
+          />
+        }
+      />
+      <ToolboxItem
+        label="Accordion"
+        icon={<ListCollapse className="w-4 h-4" />}
+        element={
+          <NodeAccordion items={["Section 1", "Section 2", "Section 3"]} />
+        }
+      />
+      <ToolboxItem
+        label="Tabs"
+        icon={<PanelTop className="w-4 h-4" />}
+        element={
+          <NodeTabs tabs={["Tab 1", "Tab 2", "Tab 3"]} defaultValue="tab-0" />
+        }
+      />
+
+      <Separator className="my-3" />
+
+      {/* Marketing Components */}
+      <div className="px-2 py-1.5">
+        <span className="text-xs font-medium text-muted-foreground">
+          Marketing
+        </span>
+      </div>
+      <ToolboxItem
+        label="Testimonial"
+        icon={<UserCircle2 className="w-4 h-4" />}
+        element={
+          <NodeTestimonial
+            quote="This is a testimonial"
+            author="Zeq Tran"
+            role="CEO"
+            avatarUrl="https://avatars.githubusercontent.com/u/124875024?v=4"
+          />
+        }
+      />
+      <ToolboxItem
+        label="Pricing"
+        icon={<BadgeDollarSign className="w-4 h-4" />}
+        element={
+          <NodePricing
+            title="Pro Plan"
+            price="$29"
+            benefits="Benefit 1, Benefit 2"
+            buttonText="Buy Now"
+          />
+        }
+      />
+      <ToolboxItem
+        label="CTA"
+        icon={<Megaphone className="w-4 h-4" />}
+        element={
+          <NodeCTA
+            title="Call to Action"
+            subtitle="Subtitle here"
+            buttonText="Click Me"
+            buttonLink="#"
+          />
+        }
+      />
+      <ToolboxItem
+        label="Stats"
+        icon={<BarChart3 className="w-4 h-4" />}
+        element={<NodeStats stats="100+: Users, 99%: Satisfaction" />}
+      />
+      <ToolboxItem
+        label="Features"
+        icon={<ListChecks className="w-4 h-4" />}
+        element={
+          <NodeFeatureList features="Feature 1: Description | Feature 2: Description" />
+        }
+      />
+      <ToolboxItem
+        label="Social"
+        icon={<Share2 className="w-4 h-4" />}
+        element={
+          <NodeSocialIcons
+            twitter="#"
+            github="#"
+            facebook=""
+            instagram=""
+            linkedin=""
+            youtube=""
+          />
+        }
       />
 
       <Separator className="my-3" />

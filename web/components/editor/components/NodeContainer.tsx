@@ -1,13 +1,20 @@
 "use client";
 
-import { useNode, Element } from "@craftjs/core";
+import { useNode } from "@craftjs/core";
 import React from "react";
 
-interface NodeContainerProps {
-  padding: number;
-  backgroundColor: string;
-  flexDirection: "row" | "column";
-  gap: number;
+export interface NodeContainerProps {
+  padding?: number;
+  backgroundColor?: string;
+  flexDirection?: "row" | "column";
+  gap?: number;
+  width?: string;
+  height?: string;
+  borderRadius?: number;
+  borderWidth?: number;
+  borderColor?: string;
+  boxShadow?: string;
+  backgroundImage?: string;
   children?: React.ReactNode;
 }
 
@@ -16,6 +23,13 @@ export const NodeContainer = ({
   backgroundColor = "transparent",
   flexDirection = "column",
   gap = 8,
+  width = "100%",
+  height = "auto",
+  borderRadius = 8,
+  borderWidth = 0,
+  borderColor = "transparent",
+  boxShadow = "none",
+  backgroundImage = "",
   children,
 }: NodeContainerProps) => {
   const {
@@ -36,10 +50,15 @@ export const NodeContainer = ({
         gap: `${gap}px`,
         padding: `${padding}px`,
         backgroundColor,
+        backgroundImage,
+        width,
+        height,
         minHeight: "100px",
         outline: selected ? "2px solid #3b82f6" : "2px dashed #e5e7eb",
         outlineOffset: "2px",
-        borderRadius: "8px",
+        borderRadius: `${borderRadius}px`,
+        border: `${borderWidth}px solid ${borderColor}`,
+        boxShadow,
         cursor: "grab",
       }}
     >
@@ -53,6 +72,10 @@ NodeContainer.craft = {
   props: {
     padding: 16,
     backgroundColor: "transparent",
+    borderRadius: 8,
+    borderWidth: 0,
+    borderColor: "transparent",
+    boxShadow: "none",
     flexDirection: "column",
     gap: 8,
   },
