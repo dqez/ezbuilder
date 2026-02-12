@@ -17,7 +17,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Separator } from "@/components/ui/separator";
 
 interface EditorToolbarProps {
   onDeviceChange?: (device: "desktop" | "tablet" | "mobile") => void;

@@ -2,9 +2,18 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-type CreateWebsiteDialogProps = {
+interface CreateWebsiteDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: {
@@ -13,7 +22,7 @@ type CreateWebsiteDialogProps = {
     description?: string;
   }) => void;
   loading?: boolean;
-};
+}
 
 export function CreateWebsiteDialog({
   isOpen,
@@ -24,8 +33,6 @@ export function CreateWebsiteDialog({
   const [name, setName] = useState("");
   const [subdomain, setSubdomain] = useState("");
   const [description, setDescription] = useState("");
-
-  if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +45,6 @@ export function CreateWebsiteDialog({
 
   const handleNameChange = (value: string) => {
     setName(value);
-    // Auto-generate subdomain from name
     if (!subdomain) {
       setSubdomain(
         value
@@ -51,89 +57,69 @@ export function CreateWebsiteDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Tạo Website Mới</DialogTitle>
+          <DialogDescription>
+            Điền các thông tin cơ bản để bắt đầu xây dựng trang web của bạn.
+          </DialogDescription>
+        </DialogHeader>
 
-      {/* Dialog */}
-      <div className="relative bg-background rounded-xl shadow-xl w-full max-w-md p-6">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        <h2 className="text-xl font-bold mb-6">Tạo Website Mới</h2>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="name" className="text-sm font-medium">
-              Tên website
-            </label>
-            <input
+        <form onSubmit={handleSubmit} className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="name">Tên Website</Label>
+            <Input
               id="name"
-              type="text"
               value={name}
               onChange={(e) => handleNameChange(e.target.value)}
               placeholder="Portfolio của tôi"
+              className="col-span-3"
               required
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="subdomain" className="text-sm font-medium">
-              Subdomain
-            </label>
+          <div className="grid gap-2">
+            <Label htmlFor="subdomain">Subdomain</Label>
             <div className="flex items-center gap-2">
-              <input
+              <Input
                 id="subdomain"
-                type="text"
                 value={subdomain}
                 onChange={(e) => setSubdomain(e.target.value)}
                 placeholder="my-portfolio"
+                className="flex-1"
                 required
-                className="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-muted-foreground whitespace-nowrap">
                 .ezbuilder.local
               </span>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Chỉ dùng chữ thường, số và dấu gạch ngang
+            <p className="text-[0.8rem] text-muted-foreground">
+              Chỉ dùng chữ thường, số và dấu gạch ngang (-)
             </p>
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="description" className="text-sm font-medium">
-              Mô tả (tùy chọn)
-            </label>
+          <div className="grid gap-2">
+            <Label htmlFor="description">Mô tả (Tùy chọn)</Label>
             <textarea
               id="description"
+              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Một website portfolio đơn giản..."
-              rows={3}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+              placeholder="Mô tả trang web của bạn..."
             />
           </div>
 
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              className="flex-1"
-            >
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>
               Hủy
             </Button>
-            <Button type="submit" className="flex-1" disabled={loading}>
+            <Button type="submit" disabled={loading}>
               {loading ? "Đang tạo..." : "Tạo Website"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
