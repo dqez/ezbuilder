@@ -2,7 +2,15 @@
 
 import { useEditor } from "@craftjs/core";
 import { Button } from "@/components/ui/button";
-import { Undo2, Redo2, Monitor, Tablet, Smartphone } from "lucide-react";
+import {
+  Undo2,
+  Redo2,
+  Monitor,
+  Tablet,
+  Smartphone,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -14,11 +22,15 @@ import { Separator } from "@/components/ui/separator";
 interface EditorToolbarProps {
   onDeviceChange?: (device: "desktop" | "tablet" | "mobile") => void;
   currentDevice?: "desktop" | "tablet" | "mobile";
+  zoom?: number;
+  onZoomChange?: (zoom: number) => void;
 }
 
 export const EditorToolbar = ({
   onDeviceChange,
   currentDevice = "desktop",
+  zoom = 1,
+  onZoomChange,
 }: EditorToolbarProps) => {
   const { actions, canUndo, canRedo } = useEditor((state, query) => ({
     canUndo: query.history.canUndo(),
@@ -77,11 +89,10 @@ export const EditorToolbar = ({
           </Tooltip>
         </div>
 
-        {/* Center: Device Preview */}
-        {onDeviceChange && (
-          <>
-            <Separator orientation="vertical" className="h-6" />
-            <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+        {/* Center: Device Preview + Zoom */}
+        <div className="flex items-center gap-4">
+          {onDeviceChange && (
+            <div className="flex items-center gap-1 bg-muted/50 rounded-lg p-1">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -132,8 +143,32 @@ export const EditorToolbar = ({
                 </TooltipContent>
               </Tooltip>
             </div>
-          </>
-        )}
+          )}
+
+          {onZoomChange && (
+            <div className="flex items-center gap-1 border-l pl-4">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+                onClick={() => onZoomChange(Math.max(0.5, zoom - 0.1))}
+              >
+                <ZoomOut className="h-4 w-4" />
+              </Button>
+              <span className="text-xs font-mono w-12 text-center text-muted-foreground select-none">
+                {Math.round(zoom * 100)}%
+              </span>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+                onClick={() => onZoomChange(Math.min(1.5, zoom + 0.1))}
+              >
+                <ZoomIn className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </div>
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2">

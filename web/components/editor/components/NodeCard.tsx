@@ -3,7 +3,6 @@
 import { useNode } from "@craftjs/core";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
