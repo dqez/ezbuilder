@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Loader2, Search, Ghost } from "lucide-react";
 import { websitesApi, type Website } from "@/lib/api/websites";
+import { pagesApi } from "@/lib/api/pages";
+import { type Template } from "@/lib/templates";
 import { WebsiteCard } from "@/components/dashboard/WebsiteCard";
 import { CreateWebsiteDialog } from "@/components/dashboard/CreateWebsiteDialog";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
@@ -47,12 +49,33 @@ export default function DashboardPage() {
     name: string;
     subdomain: string;
     description?: string;
+    template: Template;
   }) => {
     setCreating(true);
     try {
-      const newWebsite = await websitesApi.create(data);
-      setWebsites((prev) => [...prev, newWebsite]);
+      // 1. Create website
+      const newWebsite = await websitesApi.create({
+        name: data.name,
+        subdomain: data.subdomain,
+        description: data.description,
+      });
+
+      // 2. Create home page with template content
+      try {
+        await pagesApi.create({
+          name: "Trang chủ",
+          slug: "home",
+          websiteId: newWebsite.id,
+          content: data.template.data,
+        });
+      } catch (e) {
+        console.error("Failed to create home page:", e);
+        // We still continue as the website was created
+      }
+
+      setWebsites((prev) => [newWebsite, ...prev]);
       setDialogOpen(false);
+      setSearchTerm(""); // Reset search to show new website
     } catch {
       setError("Không thể tạo website");
     } finally {
@@ -122,7 +145,7 @@ export default function DashboardPage() {
           </div>
         ) : filteredWebsites.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground">
-            Không tìm thấy website nào khớp với từ khóa "{searchTerm}"
+            Không tìm thấy website nào khớp với từ khóa &quot;{searchTerm}&quot;
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
