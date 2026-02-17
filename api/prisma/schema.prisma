@@ -19,7 +19,9 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  websites  Website[]
+  websites          Website[]
+  aiChats           AiChat[]
+  aiPromptTemplates AiPromptTemplate[]
 
   @@map("users")
 }
@@ -57,8 +59,69 @@ model Page {
   websiteId   String
   website     Website   @relation(fields: [websiteId], references: [id], onDelete: Cascade)
 
+  aiChats     AiChat[]
+
   @@unique([websiteId, slug])
   @@index([websiteId])
 
   @@map("pages")
 }
+
+/// AI Chat session for each page
+model AiChat {
+  id        String   @id @default(uuid())
+  title     String?  // Auto-generated from first message
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pageId    String
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  messages  AiMessage[]
+
+  @@index([pageId])
+  @@index([userId])
+
+  @@map("ai_chats")
+}
+
+/// Message in AI chat
+model AiMessage {
+  id        String   @id @default(uuid())
+  role      String   // "user", "assistant", "system"
+  content   String   // Text content
+  metadata  Json?    // { model, tokens, duration, actions[] }
+  createdAt DateTime @default(now())
+
+  chatId    String
+  chat      AiChat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([chatId])
+
+  @@map("ai_messages")
+}
+
+/// Prompt template for quick actions
+model AiPromptTemplate {
+  id          String   @id @default(uuid())
+  name        String   // "Create Hero", "Add Contact Form", etc.
+  category    String   // "section", "component", "layout", "style"
+  prompt      String   // The actual prompt text
+  description String?
+  isSystem    Boolean  @default(false) // System-provided vs user-created
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId      String?  // null = system template
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([category])
+  @@index([userId])
+
+  @@map("ai_prompt_templates")
+}
+
