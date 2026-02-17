@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { WebsitesModule } from './modules/websites/websites.module';
 import { PagesModule } from './modules/pages/pages.module';
 import { PublicModule } from './modules/public/public.module';
+import { AiModule } from './modules/ai/ai.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PublicModule } from './modules/public/public.module';
     WebsitesModule,
     PagesModule,
     PublicModule,
+    AiModule,
   ],
 })
 export class AppModule {}
