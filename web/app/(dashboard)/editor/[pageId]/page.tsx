@@ -4,7 +4,9 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Editor, Frame, Element, useEditor } from "@craftjs/core";
-import { ArrowLeft, Loader2, Save, Upload, EyeOff } from "lucide-react";
+import { ArrowLeft, Loader2, Save, Upload, EyeOff, Bot } from "lucide-react";
+import { useAiStore } from "@/lib/stores/ai-store";
+import { AiChatPanel } from "@/components/ai/AiChatPanel";
 import { Button } from "@/components/ui/button";
 import { pagesApi, type Page } from "@/lib/api/pages";
 import { Toolbox } from "@/components/editor/Toolbox";
@@ -221,6 +223,7 @@ function EditorHeader({
   const { actions, query } = useEditor();
   const canUndo = query.history.canUndo();
   const canRedo = query.history.canRedo();
+  const { togglePanel, isPanelOpen } = useAiStore();
 
   return (
     <header className="h-14 px-4 bg-background border-b flex items-center justify-between">
@@ -319,6 +322,17 @@ function EditorHeader({
             <ZoomIn className="w-4 h-4" />
           </button>
         </div>
+
+        {/* AI Assistant Toggle */}
+        <Button
+          variant={isPanelOpen ? "default" : "outline"}
+          size="sm"
+          onClick={togglePanel}
+          className="gap-2 mr-2"
+        >
+          <Bot className="w-4 h-4" />
+          AI Assistant
+        </Button>
 
         {/* Publish Button */}
         <Button
@@ -524,6 +538,9 @@ export default function EditorPage() {
               <SettingsPanel />
             </div>
           </aside>
+
+          {/* AI Chat Panel */}
+          <AiChatPanel pageId={pageId} />
         </div>
       </div>
     </Editor>

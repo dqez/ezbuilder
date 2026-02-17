@@ -1,7 +1,7 @@
 "use client";
 
 import { Editor, Frame, Element } from "@craftjs/core";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { EditorToolbar } from "./EditorToolbar";
 import { Toolbox } from "./Toolbox";
 import { SettingsPanel } from "./SettingsPanel";
@@ -10,10 +10,12 @@ import { NodeContainer } from "./components/NodeContainer";
 import { LayersPanel } from "./LayersPanel";
 import { RenderNode } from "./RenderNode";
 import { ShortcutsHandler } from "./ShortcutsHandler";
+import { AiChatPanel } from "../ai/AiChatPanel";
 
 interface BuilderProps {
   initialData?: string | null;
   onSave?: (json: string) => void;
+  pageId: string; // Required for AI chat
 }
 
 type DeviceType = "desktop" | "tablet" | "mobile";
@@ -24,7 +26,7 @@ const DEVICE_WIDTHS = {
   mobile: "375px",
 };
 
-export const Builder = ({ initialData, onSave }: BuilderProps) => {
+export const Builder = ({ initialData, onSave, pageId }: BuilderProps) => {
   const [device, setDevice] = useState<DeviceType>("desktop");
   const [zoom, setZoom] = useState(1);
 
@@ -139,6 +141,9 @@ export const Builder = ({ initialData, onSave }: BuilderProps) => {
               <SettingsPanel />
             </div>
           </aside>
+
+          {/* AI Chat Panel */}
+          <AiChatPanel pageId={pageId} />
         </div>
       </div>
     </Editor>

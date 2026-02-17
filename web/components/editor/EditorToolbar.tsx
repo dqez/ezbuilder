@@ -10,7 +10,9 @@ import {
   Smartphone,
   ZoomIn,
   ZoomOut,
+  Bot,
 } from "lucide-react";
+import { useAiStore } from "@/lib/stores/ai-store";
 import {
   Tooltip,
   TooltipContent,
@@ -171,6 +173,16 @@ export const EditorToolbar = ({
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2">
+          <Button
+            variant={useAiStore().isPanelOpen ? "default" : "outline"}
+            size="sm"
+            onClick={useAiStore().togglePanel}
+            className="gap-2"
+          >
+            <Bot className="h-4 w-4" />
+            AI Assistant
+          </Button>
+
           <Button variant="outline" size="sm">
             Preview
           </Button>
