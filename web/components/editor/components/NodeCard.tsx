@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Image as ImageIcon } from "lucide-react";
 
 interface NodeCardProps {
   title: string;
@@ -18,7 +19,7 @@ interface NodeCardProps {
 export const NodeCard = ({
   title = "Card Title",
   description = "This is a description for the card component. You can edit this text.",
-  imageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop",
+  imageUrl = "",
   variant = "vertical",
 }: NodeCardProps) => {
   const {
@@ -30,6 +31,53 @@ export const NodeCard = ({
 
   const isOverlay = variant === "overlay";
   const isHorizontal = variant === "horizontal";
+
+  const renderImage = () => {
+    if (imageUrl) {
+      if (isOverlay) {
+        return (
+          <>
+            <img
+              src={imageUrl}
+              alt={title}
+              className="absolute inset-0 w-full h-full object-cover z-0"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
+          </>
+        );
+      }
+      return (
+        <img
+          src={imageUrl}
+          alt={title}
+          className={`${isHorizontal ? "w-1/3 min-w-[120px]" : "w-full h-48"} object-cover`}
+        />
+      );
+    }
+
+    // Placeholder when no image
+    const placeholderClass = isOverlay
+      ? "absolute inset-0 z-0 bg-slate-50 flex items-center justify-center"
+      : `${isHorizontal ? "w-1/3 min-w-[120px]" : "w-full h-48"} bg-slate-50 flex items-center justify-center`;
+
+    return (
+      <div className={placeholderClass}>
+        <div className="flex flex-col items-center gap-2 text-slate-400">
+          <ImageIcon className="w-8 h-8 opacity-50" />
+          <span className="text-xs font-medium">No Image</span>
+        </div>
+        {/* Maintain gradient for overlay readability if needed, but white bg requested. 
+            However, overlay text (white) needs contrast. 
+            If isOverlay, we MUST add a gradient or change text color. 
+            Given the component structure, changing text color dynamically is harder without more logic.
+            So I will keep the gradient for overlay even with placeholder.
+        */}
+        {isOverlay && (
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent z-10" />
+        )}
+      </div>
+    );
+  };
 
   return (
     <div
@@ -44,28 +92,15 @@ export const NodeCard = ({
       }}
     >
       <Card
-        className={`overflow-hidden h-full ${isOverlay ? "relative aspect-video flex flex-col justify-end border-0" : isHorizontal ? "flex flex-row" : "flex flex-col"}`}
+        className={`overflow-hidden h-full ${
+          isOverlay
+            ? "relative aspect-video flex flex-col justify-end border-0"
+            : isHorizontal
+              ? "flex flex-row"
+              : "flex flex-col"
+        }`}
       >
-        {/* Background Image for Overlay */}
-        {isOverlay && (
-          <>
-            <img
-              src={imageUrl}
-              alt={title}
-              className="absolute inset-0 w-full h-full object-cover z-0"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
-          </>
-        )}
-
-        {/* Normal Image for Vertical/Horizontal */}
-        {!isOverlay && (
-          <img
-            src={imageUrl}
-            alt={title}
-            className={`${isHorizontal ? "w-1/3 min-w-[120px]" : "w-full h-48"} object-cover`}
-          />
-        )}
+        {renderImage()}
 
         <div
           className={`flex flex-col flex-1 z-20 ${isOverlay ? "bg-transparent p-4" : ""}`}
@@ -86,7 +121,6 @@ export const NodeCard = ({
               {description}
             </CardDescription>
           </CardHeader>
-          {/* CardContent or Footer could go here if props existed */}
         </div>
       </Card>
     </div>
@@ -99,7 +133,7 @@ NodeCard.craft = {
     title: "Card Title",
     description:
       "This is a description for the card component. You can edit this text.",
-    imageUrl: "https://placehold.co/400x200/f3f4f6/9ca3af?text=Card+Image",
+    imageUrl: "",
   },
   related: {},
 };
