@@ -1,7 +1,7 @@
 "use client";
 
 import { Editor, Frame, Element } from "@craftjs/core";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EditorToolbar } from "./EditorToolbar";
 import { Toolbox } from "./Toolbox";
 import { SettingsPanel } from "./SettingsPanel";
@@ -11,6 +11,7 @@ import { LayersPanel } from "./LayersPanel";
 import { RenderNode } from "./RenderNode";
 import { ShortcutsHandler } from "./ShortcutsHandler";
 import { AiChatPanel } from "../ai/AiChatPanel";
+import { useAiStore } from "@/lib/stores/ai-store";
 
 interface BuilderProps {
   initialData?: string | null;
@@ -27,6 +28,7 @@ const DEVICE_WIDTHS = {
 };
 
 export const Builder = ({ initialData, onSave, pageId }: BuilderProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [device, setDevice] = useState<DeviceType>("desktop");
   const [zoom, setZoom] = useState(1);
 
@@ -34,6 +36,21 @@ export const Builder = ({ initialData, onSave, pageId }: BuilderProps) => {
   const [activeTab, setActiveTab] = useState<"components" | "layers">(
     "components",
   );
+
+  const togglePanel = useAiStore((state) => state.togglePanel);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + I
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "i") {
+        e.preventDefault();
+        togglePanel();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [togglePanel]);
 
   // Keyboard shortcuts managed by ShortcutsHandler component inside Editor context
 

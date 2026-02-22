@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useEditor } from "@craftjs/core";
 import { useAiStore } from "@/lib/stores/ai-store";
 import { aiApi } from "@/lib/api/ai";
@@ -15,12 +15,30 @@ export function AiChatInput({ pageId }: AiChatInputProps) {
   const [input, setInput] = useState("");
   const {
     currentChatId,
+    messages,
     addMessage,
     appendToLastMessage,
     addActionToLastMessage,
     setStreaming,
     setChatId,
+    templates,
+    fetchTemplates,
+    isPanelOpen,
   } = useAiStore();
+
+  useEffect(() => {
+    fetchTemplates();
+  }, [fetchTemplates]);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isPanelOpen && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
+    }
+  }, [isPanelOpen]);
 
   const { query } = useEditor();
   const { executeAction } = useCraftActionExecutor();
@@ -131,19 +149,33 @@ export function AiChatInput({ pageId }: AiChatInputProps) {
   };
 
   return (
-    <div className="p-4 border-t">
+    <div className="p-4 border-t flex flex-col gap-3">
+      {templates && templates.length > 0 && messages.length === 0 && (
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+          {templates.map((tpl) => (
+            <button
+              key={tpl.id}
+              onClick={() => setInput(tpl.prompt)}
+              className="whitespace-nowrap px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full border border-gray-200 transition-colors"
+            >
+              {tpl.name}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="flex gap-2">
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
           placeholder="Mô tả gì đó bạn muốn tạo..."
-          className="flex-1 px-3 py-2 border rounded-lg"
+          className="flex-1 px-3 py-2 border rounded-lg text-sm"
         />
         <button
           onClick={handleSend}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
         >
           Gửi
         </button>

@@ -6,7 +6,7 @@ export const aiApi = {
     chatId?: string;
     pageId: string;
     message: string;
-    canvasState?: any;
+    canvasState?: Record<string, unknown>;
   }) {
     const token = localStorage.getItem("auth_token");
 
@@ -45,10 +45,30 @@ export const aiApi = {
     return response.json();
   },
 
+  async getChat(chatId: string) {
+    const token = localStorage.getItem("auth_token");
+    const response = await fetch(`${API_URL}/ai/chats/${chatId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.json();
+  },
+
   async deleteChat(chatId: string) {
     const token = localStorage.getItem("auth_token");
     const response = await fetch(`${API_URL}/ai/chats/${chatId}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.json();
+  },
+
+  async getTemplates() {
+    const token = localStorage.getItem("auth_token");
+    const response = await fetch(`${API_URL}/ai/templates`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
