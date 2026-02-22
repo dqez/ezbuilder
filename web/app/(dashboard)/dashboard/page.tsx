@@ -2,22 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2, Search, Ghost } from "lucide-react";
 import { websitesApi, type Website } from "@/lib/api/websites";
+import { pagesApi } from "@/lib/api/pages";
+import { type Template } from "@/lib/templates";
 import { WebsiteCard } from "@/components/dashboard/WebsiteCard";
 import { CreateWebsiteDialog } from "@/components/dashboard/CreateWebsiteDialog";
+import { DashboardStats } from "@/components/dashboard/DashboardStats";
+import { Input } from "@/components/ui/input";
 
 export default function DashboardPage() {
   const [websites, setWebsites] = useState<Website[]>([]);
+  const [filteredWebsites, setFilteredWebsites] = useState<Website[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState("");
 
   const fetchWebsites = async () => {
     try {
       const data = await websitesApi.getAll();
       setWebsites(data);
+      setFilteredWebsites(data);
     } catch {
       setError("Không thể tải danh sách website");
     } finally {
@@ -29,16 +36,46 @@ export default function DashboardPage() {
     fetchWebsites();
   }, []);
 
+  useEffect(() => {
+    const filtered = websites.filter(
+      (site) =>
+        site.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        site.subdomain.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+    setFilteredWebsites(filtered);
+  }, [searchTerm, websites]);
+
   const handleCreateWebsite = async (data: {
     name: string;
     subdomain: string;
     description?: string;
+    template: Template;
   }) => {
     setCreating(true);
     try {
-      const newWebsite = await websitesApi.create(data);
-      setWebsites((prev) => [...prev, newWebsite]);
+      // 1. Create website
+      const newWebsite = await websitesApi.create({
+        name: data.name,
+        subdomain: data.subdomain,
+        description: data.description,
+      });
+
+      // 2. Create home page with template content
+      try {
+        await pagesApi.create({
+          name: "Trang chủ",
+          slug: "home",
+          websiteId: newWebsite.id,
+          content: data.template.data,
+        });
+      } catch (e) {
+        console.error("Failed to create home page:", e);
+        // We still continue as the website was created
+      }
+
+      setWebsites((prev) => [newWebsite, ...prev]);
       setDialogOpen(false);
+      setSearchTerm(""); // Reset search to show new website
     } catch {
       setError("Không thể tạo website");
     } finally {
@@ -48,51 +85,76 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      <div className="flex items-center justify-center py-20 min-h-[60vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-primary/50" />
       </div>
     );
   }
 
   return (
-    <>
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold">Websites của tôi</h1>
-          <p className="text-muted-foreground mt-1">
-            Quản lý và chỉnh sửa các website của bạn
-          </p>
-        </div>
-        <Button onClick={() => setDialogOpen(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          Tạo Website
-        </Button>
+    <div className="space-y-8">
+      {/* Header & Stats */}
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight mb-6">Dashboard</h1>
+        <DashboardStats
+          totalWebsites={websites.length}
+          activeWebsites={websites.filter((w) => w.isActive).length}
+        />
       </div>
 
-      {error && (
-        <div className="p-4 mb-6 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg">
-          {error}
-        </div>
-      )}
-
-      {websites.length === 0 ? (
-        <div className="text-center py-20 bg-muted/30 rounded-xl border border-dashed">
-          <h3 className="text-lg font-medium mb-2">Chưa có website nào</h3>
-          <p className="text-muted-foreground mb-4">
-            Bắt đầu bằng cách tạo website đầu tiên của bạn
-          </p>
+      {/* Main Content Area */}
+      <div className="bg-background rounded-xl border shadow-sm p-6 min-h-[500px]">
+        {/* Toolbar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+          <div className="relative w-full sm:w-96">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Tìm kiếm website..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9"
+            />
+          </div>
           <Button onClick={() => setDialogOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
-            Tạo Website
+            Tạo Website Mới
           </Button>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {websites.map((website) => (
-            <WebsiteCard key={website.id} website={website} />
-          ))}
-        </div>
-      )}
+
+        {error && (
+          <div className="p-4 mb-6 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg">
+            {error}
+          </div>
+        )}
+
+        {/* Website Grid */}
+        {websites.length === 0 ? (
+          <div className="text-center py-20 flex flex-col items-center justify-center">
+            <div className="w-20 h-20 bg-muted/30 rounded-full flex items-center justify-center mb-4">
+              <Ghost className="w-10 h-10 text-muted-foreground/50" />
+            </div>
+            <h3 className="text-xl font-medium mb-2">Chưa có website nào</h3>
+            <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
+              Bạn chưa tạo bất kỳ website nào. Hãy bắt đầu xây dựng trang web
+              đầu tiên của bạn ngay hôm nay!
+            </p>
+            <Button size="lg" onClick={() => setDialogOpen(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Tạo Website Đầu Tiên
+            </Button>
+          </div>
+        ) : filteredWebsites.length === 0 ? (
+          <div className="text-center py-20 text-muted-foreground">
+            Không tìm thấy website nào khớp với từ khóa &quot;{searchTerm}&quot;
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredWebsites.map((website) => (
+              <WebsiteCard key={website.id} website={website} />
+            ))}
+          </div>
+        )}
+      </div>
 
       <CreateWebsiteDialog
         isOpen={dialogOpen}
@@ -100,6 +162,6 @@ export default function DashboardPage() {
         onSubmit={handleCreateWebsite}
         loading={creating}
       />
-    </>
+    </div>
   );
 }
