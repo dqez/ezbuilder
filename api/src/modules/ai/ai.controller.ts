@@ -14,6 +14,7 @@ import type { Response } from 'express';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { AiService } from './ai.service';
 import { ChatHistoryService } from './services/chat-history.service';
+import { PromptTemplateService } from './services/prompt-template.service';
 import { ChatMessageDto } from './dto/chat-message.dto';
 
 @Controller('ai')
@@ -22,6 +23,7 @@ export class AiController {
   constructor(
     private aiService: AiService,
     private chatHistory: ChatHistoryService,
+    private promptTemplateService: PromptTemplateService,
   ) {}
 
   @Post('chat')
@@ -70,5 +72,10 @@ export class AiController {
   @Delete('chats/:chatId')
   async deleteChat(@Param('chatId') chatId: string) {
     return this.chatHistory.deleteChat(chatId);
+  }
+
+  @Get('templates')
+  async getTemplates() {
+    return this.promptTemplateService.getSystemTemplates();
   }
 }
