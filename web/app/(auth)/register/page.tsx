@@ -1,8 +1,9 @@
 import { RegisterForm } from "@/components/auth/RegisterForm";
+import { APP_NAME } from "@/lib/constants";
 
 export const metadata = {
-  title: "Đăng ký - EZBuilder",
-  description: "Tạo tài khoản EZBuilder miễn phí",
+  title: `Đăng ký - ${APP_NAME}`,
+  description: `Tạo tài khoản ${APP_NAME} miễn phí`,
 };
 
 export default function RegisterPage() {

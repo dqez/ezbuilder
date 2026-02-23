@@ -82,8 +82,9 @@ export function Features() {
             transition={{ delay: 0.1 }}
             className="text-lg text-muted-foreground max-w-2xl mx-auto"
           >
-            Không chỉ là kéo thả, EZBuilder cung cấp bộ công cụ mạnh mẽ dành cho
-            cả marketer và developer.
+            Không chỉ là kéo thả,{" "}
+            {process.env.NEXT_PUBLIC_APP_NAME || "EZBuilder"} cung cấp bộ công
+            cụ mạnh mẽ dành cho cả marketer và developer.
           </motion.p>
         </div>
 

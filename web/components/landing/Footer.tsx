@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Github, Twitter, Linkedin } from "lucide-react";
+import { APP_NAME } from "@/lib/constants";
 
 export function Footer() {
   return (
@@ -14,7 +15,7 @@ export function Footer() {
               <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
                 EZ
               </div>
-              <span>EZBuilder</span>
+              <span>{APP_NAME}</span>
             </Link>
             <p className="text-sm text-muted-foreground mb-4">
               Xây dựng landing page chuyên nghiệp không cần code. Nhanh chóng,
@@ -117,7 +118,7 @@ export function Footer() {
         </div>
 
         <div className="border-t mt-12 pt-8 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} EZBuilder. All rights reserved.
+          © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
         </div>
       </div>
     </footer>

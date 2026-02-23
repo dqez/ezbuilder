@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { Button } from "@/components/ui/button";
+import { APP_NAME } from "@/lib/constants";
 import { LogOut, LayoutDashboard } from "lucide-react";
 
 export default function DashboardLayout({
@@ -47,7 +48,7 @@ export default function DashboardLayout({
         <div className="container mx-auto max-w-7xl h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/dashboard" className="font-bold text-lg">
-              EZBuilder
+              {APP_NAME}
             </Link>
             <nav className="flex items-center gap-4">
               <Link

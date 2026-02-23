@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { APP_NAME } from "@/lib/constants";
 
 export function Navbar() {
   const { scrollY } = useScroll();
@@ -31,7 +32,7 @@ export function Navbar() {
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
             EZ
           </div>
-          <span>EZBuilder</span>
+          <span>{APP_NAME}</span>
         </Link>
 
         {/* Desktop Nav */}

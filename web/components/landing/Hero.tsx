@@ -92,7 +92,8 @@ export function Hero() {
                 <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50" />
               </div>
               <div className="mx-auto bg-muted/50 h-5 w-64 rounded-md flex items-center justify-center text-[10px] text-muted-foreground font-mono">
-                ezbuilder.com/editor/new-project
+                {process.env.NEXT_PUBLIC_APP_NAME?.toLowerCase() || "ezbuilder"}
+                .com/editor/new-project
               </div>
             </div>
 
