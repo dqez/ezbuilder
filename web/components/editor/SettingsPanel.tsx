@@ -31,7 +31,7 @@ export const SettingsPanel = () => {
     }
   };
 
-  const handlePropChange = (key: string, value: any) => {
+  const handlePropChange = (key: string, value: unknown) => {
     if (selected?.id) {
       actions.setProp(selected.id, (props) => {
         props[key] = value;
@@ -782,7 +782,7 @@ export const SettingsPanel = () => {
                   className="w-full h-9 px-3 rounded-md border border-input bg-transparent text-sm"
                 >
                   {Array.isArray(selected.props.tabs) &&
-                    selected.props.tabs.map((_: any, i: number) => (
+                    selected.props.tabs.map((_: string, i: number) => (
                       <option key={i} value={`tab-${i}`}>
                         Tab {i + 1}
                       </option>
