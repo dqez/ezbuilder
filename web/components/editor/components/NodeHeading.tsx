@@ -59,12 +59,11 @@ export const NodeHeading = ({
 
   const finalFontWeight = fontWeight || defaultFontWeight;
 
-  const HeadingTag = level === 1 ? "h1" : level === 2 ? "h2" : "h3";
   const Tag = level === 1 ? "h1" : level === 2 ? "h2" : "h3";
 
   return (
     <Tag
-      ref={(ref: any) => {
+      ref={(ref: HTMLHeadingElement | null) => {
         if (ref) connect(drag(ref));
       }}
       className={animation}

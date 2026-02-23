@@ -27,13 +27,6 @@ export const ShortcutsHandler = () => {
       }
 
       // Redo: Ctrl+Y or Ctrl+Shift+Z
-      const isRedo =
-        ((e.ctrlKey || e.metaKey) && e.key === "y") ||
-        ((e.ctrlKey || e.metaKey) &&
-          e.shiftKey &&
-          e.key === "z" &&
-          e.key.toLowerCase() === "z"); // e.key is 'Z' if shift is held? Check browser behavior.
-
       // Actually e.key is case insensitive check if usually logic.
       // Easiest check:
       const meta = e.ctrlKey || e.metaKey;

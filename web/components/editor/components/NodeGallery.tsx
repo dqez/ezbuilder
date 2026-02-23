@@ -42,6 +42,7 @@ export const NodeGallery = ({
       }}
     >
       {images.map((src, index) => (
+        /* eslint-disable-next-line @next/next/no-img-element */
         <img
           key={index}
           src={src}
