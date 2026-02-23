@@ -1,3 +1,4 @@
+import helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
@@ -7,6 +8,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api/v1');
+
+  app.use(helmet());
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -18,7 +21,19 @@ async function bootstrap() {
 
   app.useGlobalFilters(new PrismaExceptionFilter());
 
-  app.enableCors();
+  const allowedOrigins = process.env.FRONTEND_URL
+    ? [
+        process.env.FRONTEND_URL,
+        'http://localhost:3000',
+        'http://localhost:3001',
+      ]
+    : ['http://localhost:3000', 'http://localhost:3001'];
+
+  app.enableCors({
+    origin: allowedOrigins,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
 
   app.enableShutdownHooks();
 
