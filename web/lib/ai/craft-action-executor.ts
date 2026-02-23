@@ -35,7 +35,7 @@ export function useCraftActionExecutor() {
           console.log("📚 Available resolver keys:", Object.keys(resolver));
 
           const ComponentClass = (
-            resolver as Record<string, React.ComponentType<any>>
+            resolver as Record<string, React.ComponentType<unknown>>
           )[component];
           console.log("🎨 ComponentClass found:", ComponentClass);
 
@@ -139,7 +139,7 @@ export function useCraftActionExecutor() {
           // Add new components using parseReactElement
           components.forEach((comp) => {
             const ComponentClass = (
-              resolver as Record<string, React.ComponentType<any>>
+              resolver as Record<string, React.ComponentType<unknown>>
             )[comp.component];
             if (ComponentClass) {
               const element = React.createElement(
