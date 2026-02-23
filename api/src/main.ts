@@ -21,13 +21,18 @@ async function bootstrap() {
 
   app.useGlobalFilters(new PrismaExceptionFilter());
 
-  const allowedOrigins = process.env.FRONTEND_URL
-    ? [
-        process.env.FRONTEND_URL,
-        'http://localhost:3000',
-        'http://localhost:3001',
-      ]
-    : ['http://localhost:3000', 'http://localhost:3001'];
+  const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001'];
+
+  if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(process.env.FRONTEND_URL);
+  }
+
+  if (process.env.ADDITIONAL_FRONTEND_URLS) {
+    const additionalUrls = process.env.ADDITIONAL_FRONTEND_URLS.split(',').map(
+      (url) => url.trim(),
+    );
+    allowedOrigins.push(...additionalUrls);
+  }
 
   app.enableCors({
     origin: allowedOrigins,
