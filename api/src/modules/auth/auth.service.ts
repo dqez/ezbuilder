@@ -80,6 +80,10 @@ export class AuthService {
     if (!user) throw new UnauthorizedException('Invalid credentials');
     if (!user.isActive) throw new ForbiddenException('Account is disabled');
 
+    if (!user.password) {
+      throw new UnauthorizedException('Please login with Google');
+    }
+
     const ok = await bcrypt.compare(dto.password, user.password);
     if (!ok) throw new UnauthorizedException('Invalid credentials');
 
@@ -95,5 +99,40 @@ export class AuthService {
     const tokens = await this.issueTokens(user.id, user.role);
 
     return { user: safeUser, ...tokens };
+  }
+
+  async googleLogin(req: {
+    user: { email: string; name: string; avatarUrl?: string };
+  }) {
+    if (!req.user) {
+      throw new UnauthorizedException('No user from google');
+    }
+
+    const user = await this.usersService.findOrCreateGoogleUser({
+      email: req.user.email,
+      name: req.user.name,
+      avatarUrl: req.user.avatarUrl,
+    });
+
+    if (!user.isActive) throw new ForbiddenException('Account is disabled');
+
+    const safeUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+      createAt: user.createdAt,
+    };
+
+    const tokens = await this.issueTokens(user.id, user.role);
+
+    return { user: safeUser, ...tokens };
+  }
+
+  async getMe(userId: string) {
+    const user = await this.usersService.findById(userId);
+    if (!user) throw new UnauthorizedException('User not found');
+    return user;
   }
 }
