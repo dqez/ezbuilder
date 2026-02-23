@@ -1,30 +1,19 @@
 "use client";
 
 import { useNode, useEditor } from "@craftjs/core";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { Move, Trash2 } from "lucide-react";
 
 export const RenderNode = ({ render }: { render: React.ReactElement }) => {
   const { id } = useNode();
-  const { actions, query, isActive } = useEditor((_, query) => ({
+  const { isActive } = useEditor((_, query) => ({
     isActive: query.getEvent("selected").first() === id,
   }));
 
-  const {
-    isHovered,
-    dom,
-    name,
-    moveable,
-    deletable,
-    connectors: { drag },
-    actions: { setProp },
-  } = useNode((node) => ({
+  const { isHovered, dom, name } = useNode((node) => ({
     isHovered: node.events.hovered,
     dom: node.dom,
     name: node.data.custom.displayName || node.data.displayName,
-    moveable: query.node(node.id).isDraggable(),
-    deletable: query.node(node.id).isDeletable(),
     props: node.data.props,
   }));
 

@@ -37,21 +37,25 @@ export const NodeCard = ({
       if (isOverlay) {
         return (
           <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imageUrl}
               alt={title}
               className="absolute inset-0 w-full h-full object-cover z-0"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent z-10" />
           </>
         );
       }
       return (
-        <img
-          src={imageUrl}
-          alt={title}
-          className={`${isHorizontal ? "w-1/3 min-w-[120px]" : "w-full h-48"} object-cover`}
-        />
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imageUrl}
+            alt={title}
+            className={`${isHorizontal ? "w-1/3 min-w-[120px]" : "w-full h-48"} object-cover`}
+          />
+        </>
       );
     }
 

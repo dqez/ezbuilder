@@ -27,8 +27,7 @@ const DEVICE_WIDTHS = {
   mobile: "375px",
 };
 
-export const Builder = ({ initialData, onSave, pageId }: BuilderProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const Builder = ({ onSave, pageId }: BuilderProps) => {
   const [device, setDevice] = useState<DeviceType>("desktop");
   const [zoom, setZoom] = useState(1);
 

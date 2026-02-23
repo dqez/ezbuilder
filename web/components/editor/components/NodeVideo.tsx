@@ -1,7 +1,6 @@
 "use client";
 
 import { useNode } from "@craftjs/core";
-import { useState } from "react";
 
 interface NodeVideoProps {
   url: string;

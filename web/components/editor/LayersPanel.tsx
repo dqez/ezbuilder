@@ -1,17 +1,8 @@
 "use client";
 
 import { useEditor } from "@craftjs/core";
-import {
-  ChevronRight,
-  ChevronDown,
-  Box,
-  Layers,
-  Eye,
-  EyeOff,
-} from "lucide-react";
+import { ChevronRight, ChevronDown, Box } from "lucide-react";
 import { useState } from "react";
-import { cn } from "@/lib/utils"; // Assuming cn exists, else generic className
-import { Button } from "@/components/ui/button";
 
 // Helper to map component names to icons?
 // For now generic Box.
@@ -23,17 +14,15 @@ const LayerItem = ({
   nodeId: string;
   depth: number;
 }) => {
-  const { node, selected, expanded, hasChildren, actions } = useEditor(
-    (state) => {
-      const node = state.nodes[nodeId];
-      return {
-        node,
-        selected: state.events.selected.has(nodeId),
-        expanded: false, // We need local state for expansion
-        hasChildren: node?.data.nodes && node.data.nodes.length > 0,
-      };
-    },
-  );
+  const { node, selected, hasChildren, actions } = useEditor((state) => {
+    const node = state.nodes[nodeId];
+    return {
+      node,
+      selected: state.events.selected.has(nodeId),
+      expanded: false, // We need local state for expansion
+      hasChildren: node?.data.nodes && node.data.nodes.length > 0,
+    };
+  });
 
   const [isExpanded, setIsExpanded] = useState(true);
 

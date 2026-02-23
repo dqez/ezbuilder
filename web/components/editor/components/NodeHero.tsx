@@ -19,7 +19,6 @@ export const NodeHero = ({
   subtitle = "Create beautiful landing pages with our drag-and-drop builder. No coding required.",
   backgroundImage = "",
   ctaText = "Get Started",
-  ctaUrl = "#",
   layout = "center",
   imageUrl = "https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070&auto=format&fit=crop",
   overlayOpacity = 0.5,
@@ -84,6 +83,7 @@ export const NodeHero = ({
 
       {!isCentered && (
         <div className="flex-1 w-full flex justify-center z-10">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={imageUrl}
             alt="Hero Visual"

@@ -5,7 +5,7 @@ import { useState } from "react";
 import {
   Type,
   Heading1,
-  Image,
+  Image as ImageIcon,
   MousePointerClick,
   Square,
   ArrowUpDown,
@@ -125,7 +125,7 @@ export const Toolbox = () => {
         },
         {
           label: "Image",
-          icon: <Image className="w-4 h-4" />,
+          icon: <ImageIcon className="w-4 h-4" />,
           element: (
             <NodeImage src="" alt="Image" width="100%" borderRadius={8} />
           ),

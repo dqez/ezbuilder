@@ -12,7 +12,6 @@ interface NodeButtonProps {
 
 export const NodeButton = ({
   text = "Click me",
-  url = "#",
   variant = "default",
   size = "default",
 }: NodeButtonProps) => {

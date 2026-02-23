@@ -3,7 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { streamText } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { ChatHistoryService } from './services/chat-history.service';
-import { PromptBuilderService } from './prompts/prompt-builder.service';
+import {
+  PromptBuilderService,
+  CanvasState,
+} from './prompts/prompt-builder.service';
 
 @Injectable()
 export class AiService {
@@ -24,7 +27,7 @@ export class AiService {
     chatId?: string;
     pageId: string;
     message: string;
-    canvasState?: any;
+    canvasState?: CanvasState;
     selectedNode?: string;
   }): AsyncGenerator<string> {
     // Create or get chat
