@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { authApi } from "@/lib/api/auth";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { GoogleLoginButton } from "./GoogleLoginButton";
 import { ApiError } from "@/lib/api/client";
 
 export function LoginForm() {
@@ -80,6 +81,19 @@ export function LoginForm() {
       <Button type="submit" className="w-full" disabled={loading}>
         {loading ? "Đang đăng nhập..." : "Đăng nhập"}
       </Button>
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            Hoặc tiếp tục với
+          </span>
+        </div>
+      </div>
+
+      <GoogleLoginButton />
 
       <p className="text-center text-sm text-muted-foreground">
         Chưa có tài khoản?{" "}
