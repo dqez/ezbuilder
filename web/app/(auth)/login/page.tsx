@@ -1,8 +1,9 @@
 import { LoginForm } from "@/components/auth/LoginForm";
+import { APP_NAME } from "@/lib/constants";
 
 export const metadata = {
-  title: "Đăng nhập - EZBuilder",
-  description: "Đăng nhập vào tài khoản EZBuilder của bạn",
+  title: `Đăng nhập - ${APP_NAME}`,
+  description: `Đăng nhập vào tài khoản ${APP_NAME} của bạn`,
 };
 
 export default function LoginPage() {
