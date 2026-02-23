@@ -47,6 +47,31 @@ export class UsersService {
     });
   }
 
+  async findOrCreateGoogleUser(input: {
+    email: string;
+    name: string;
+    avatarUrl?: string;
+  }) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: input.email },
+    });
+
+    if (existingUser) {
+      return existingUser;
+    }
+
+    return this.prisma.user.create({
+      data: {
+        email: input.email,
+        name: input.name,
+        avatarUrl: input.avatarUrl,
+        password: '',
+        role: 'user',
+        isActive: true,
+      },
+    });
+  }
+
   // create(createUserDto: CreateUserDto) {
   //   return 'This action adds a new user';
   // }
