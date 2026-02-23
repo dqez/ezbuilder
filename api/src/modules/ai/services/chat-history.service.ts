@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../database/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ChatHistoryService {
@@ -18,7 +19,7 @@ export class ChatHistoryService {
     chatId: string,
     role: 'user' | 'assistant' | 'system',
     content: string,
-    metadata?: any,
+    metadata?: Prisma.InputJsonValue,
   ) {
     return this.prisma.aiMessage.create({
       data: {
