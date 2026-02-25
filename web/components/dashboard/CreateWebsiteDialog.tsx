@@ -41,6 +41,7 @@ export function CreateWebsiteDialog({
   const [name, setName] = useState("");
   const [subdomain, setSubdomain] = useState("");
   const [description, setDescription] = useState("");
+  const [showSubdomain, setShowSubdomain] = useState(false);
 
   const resetForm = () => {
     setStep(1);
@@ -48,6 +49,7 @@ export function CreateWebsiteDialog({
     setName("");
     setSubdomain("");
     setDescription("");
+    setShowSubdomain(false);
   };
 
   const handleClose = () => {
@@ -68,15 +70,14 @@ export function CreateWebsiteDialog({
 
   const handleNameChange = (value: string) => {
     setName(value);
-    if (!subdomain) {
-      setSubdomain(
-        value
-          .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, "")
-          .replace(/\s+/g, "-")
-          .slice(0, 30),
-      );
-    }
+    // Always auto-generate subdomain from name
+    setSubdomain(
+      value
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .slice(0, 30),
+    );
   };
 
   return (
@@ -113,6 +114,7 @@ export function CreateWebsiteDialog({
                     {/* Placeholder for thumbnail */}
                     <div className="absolute inset-0 flex items-center justify-center text-muted-foreground bg-muted">
                       {template.thumbnail ? (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={template.thumbnail}
                           alt={template.name}
@@ -163,22 +165,48 @@ export function CreateWebsiteDialog({
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="subdomain">Subdomain</Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="subdomain"
-                  value={subdomain}
-                  onChange={(e) => setSubdomain(e.target.value)}
-                  placeholder="my-portfolio"
-                  className="flex-1"
-                  required
-                />
-                <span className="text-sm text-muted-foreground whitespace-nowrap">
-                  .ezbuilder.local
-                </span>
+              <div className="flex items-center justify-between">
+                <Label>Địa chỉ website</Label>
+                <button
+                  type="button"
+                  onClick={() => setShowSubdomain(!showSubdomain)}
+                  className="text-xs text-primary hover:underline"
+                >
+                  {showSubdomain ? "Ẩn" : "Chỉnh sửa"}
+                </button>
               </div>
+              {showSubdomain ? (
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="subdomain"
+                    value={subdomain}
+                    onChange={(e) => setSubdomain(e.target.value)}
+                    placeholder="my-portfolio"
+                    className="flex-1"
+                    required
+                  />
+                  <span className="text-sm text-muted-foreground whitespace-nowrap">
+                    .ezbuilder.local
+                  </span>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground bg-muted/50 px-3 py-2 rounded-md">
+                  {subdomain ? (
+                    <>
+                      <span className="font-medium text-foreground">
+                        {subdomain}
+                      </span>
+                      .ezbuilder.local
+                    </>
+                  ) : (
+                    <span className="italic">
+                      Nhập tên website ở trên để tạo địa chỉ
+                    </span>
+                  )}
+                </p>
+              )}
               <p className="text-[0.8rem] text-muted-foreground">
-                Chỉ dùng chữ thường, số và dấu gạch ngang (-)
+                Địa chỉ website được tự động tạo từ tên website
               </p>
             </div>
 

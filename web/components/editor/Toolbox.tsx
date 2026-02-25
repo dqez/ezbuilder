@@ -97,14 +97,14 @@ export const Toolbox = () => {
 
   const groups = [
     {
-      name: "Basic",
+      name: "Cơ bản",
       items: [
         {
-          label: "Text",
+          label: "Văn bản",
           icon: <Type className="w-4 h-4" />,
           element: (
             <NodeText
-              text="Edit this text"
+              text="Chỉnh sửa văn bản này"
               fontSize={16}
               color="#000000"
               textAlign="left"
@@ -112,11 +112,11 @@ export const Toolbox = () => {
           ),
         },
         {
-          label: "Heading",
+          label: "Tiêu đề",
           icon: <Heading1 className="w-4 h-4" />,
           element: (
             <NodeHeading
-              text="Heading"
+              text="Tiêu đề"
               level={1}
               color="#000000"
               textAlign="left"
@@ -124,18 +124,18 @@ export const Toolbox = () => {
           ),
         },
         {
-          label: "Image",
+          label: "Hình ảnh",
           icon: <ImageIcon className="w-4 h-4" />,
           element: (
-            <NodeImage src="" alt="Image" width="100%" borderRadius={8} />
+            <NodeImage src="" alt="Hình ảnh" width="100%" borderRadius={8} />
           ),
         },
         {
-          label: "Button",
+          label: "Nút bấm",
           icon: <MousePointerClick className="w-4 h-4" />,
           element: (
             <NodeButton
-              text="Click me"
+              text="Bấm vào đây"
               url="#"
               variant="default"
               size="default"
@@ -145,14 +145,14 @@ export const Toolbox = () => {
       ],
     },
     {
-      name: "Text & Media",
+      name: "Văn bản & Media",
       items: [
         {
-          label: "Rich Text",
+          label: "Văn bản phong phú",
           icon: <TextQuote className="w-4 h-4" />,
           element: (
             <NodeRichText
-              text="Edit this rich text"
+              text="Chỉnh sửa văn bản này"
               fontSize={16}
               color="#000000"
               textAlign="left"
@@ -173,7 +173,7 @@ export const Toolbox = () => {
           ),
         },
         {
-          label: "Icon",
+          label: "Biểu tượng",
           icon: <Sparkles className="w-4 h-4" />,
           element: (
             <NodeIcon
@@ -187,17 +187,17 @@ export const Toolbox = () => {
           ),
         },
         {
-          label: "Embed",
+          label: "Nhúng mã",
           icon: <Code className="w-4 h-4" />,
           element: <NodeEmbed embedCode="" width="100%" height="400px" />,
         },
       ],
     },
     {
-      name: "Forms",
+      name: "Biểu mẫu",
       items: [
         {
-          label: "Form Wrapper",
+          label: "Khung biểu mẫu",
           icon: <RectangleHorizontal className="w-4 h-4" />,
           element: (
             <NodeForm
@@ -211,12 +211,12 @@ export const Toolbox = () => {
           ),
         },
         {
-          label: "Input",
+          label: "Ô nhập liệu",
           icon: <Type className="w-4 h-4" />,
           element: (
             <NodeInput
-              label="Input Label"
-              placeholder="Type here..."
+              label="Nhãn"
+              placeholder="Nhập tại đây..."
               inputType="text"
               required={false}
               name="input"
@@ -224,12 +224,12 @@ export const Toolbox = () => {
           ),
         },
         {
-          label: "Textarea",
+          label: "Vùng văn bản",
           icon: <AlignLeft className="w-4 h-4" />,
           element: (
             <NodeTextarea
-              label="Message"
-              placeholder="Type your message..."
+              label="Tin nhắn"
+              placeholder="Nhập tin nhắn..."
               rows={4}
               required={false}
               name="message"
@@ -237,24 +237,24 @@ export const Toolbox = () => {
           ),
         },
         {
-          label: "Select",
+          label: "Danh sách chọn",
           icon: <List className="w-4 h-4" />,
           element: (
             <NodeSelect
-              label="Select Option"
-              placeholder="Choose one..."
-              options="Option 1, Option 2, Option 3"
+              label="Chọn mục"
+              placeholder="Chọn một..."
+              options="Lựa chọn 1, Lựa chọn 2, Lựa chọn 3"
               required={false}
               name="select"
             />
           ),
         },
         {
-          label: "Checkbox",
+          label: "Hộp kiểm",
           icon: <CheckSquare className="w-4 h-4" />,
           element: (
             <NodeCheckbox
-              label="I agree"
+              label="Tôi đồng ý"
               required={false}
               name="checkbox"
               defaultChecked={false}
@@ -264,10 +264,10 @@ export const Toolbox = () => {
       ],
     },
     {
-      name: "Layout",
+      name: "Bố cục",
       items: [
         {
-          label: "Container",
+          label: "Khung chứa",
           icon: <Square className="w-4 h-4" />,
           element: (
             <Element
@@ -281,17 +281,17 @@ export const Toolbox = () => {
           ),
         },
         {
-          label: "Spacer",
+          label: "Khoảng cách",
           icon: <ArrowUpDown className="w-4 h-4" />,
           element: <NodeSpacer height={32} />,
         },
         {
-          label: "Divider",
+          label: "Đường kẻ",
           icon: <Minus className="w-4 h-4" />,
           element: <NodeDivider color="#e5e7eb" thickness={1} margin={16} />,
         },
         {
-          label: "Grid",
+          label: "Lưới",
           icon: <Grid className="w-4 h-4" />,
           element: (
             <NodeGrid
@@ -303,7 +303,7 @@ export const Toolbox = () => {
           ),
         },
         {
-          label: "Columns",
+          label: "Cột",
           icon: <ColumnsIcon className="w-4 h-4" />,
           element: (
             <NodeColumns
@@ -315,14 +315,12 @@ export const Toolbox = () => {
           ),
         },
         {
-          label: "Accordion",
+          label: "Xếp gọn",
           icon: <ListCollapse className="w-4 h-4" />,
-          element: (
-            <NodeAccordion items={["Section 1", "Section 2", "Section 3"]} />
-          ),
+          element: <NodeAccordion items={["Phần 1", "Phần 2", "Phần 3"]} />,
         },
         {
-          label: "Tabs",
+          label: "Tab",
           icon: <PanelTop className="w-4 h-4" />,
           element: (
             <NodeTabs tabs={["Tab 1", "Tab 2", "Tab 3"]} defaultValue="tab-0" />
@@ -331,58 +329,58 @@ export const Toolbox = () => {
       ],
     },
     {
-      name: "Marketing",
+      name: "Tiếp thị",
       items: [
         {
-          label: "Testimonial",
+          label: "Đánh giá",
           icon: <UserCircle2 className="w-4 h-4" />,
           element: (
             <NodeTestimonial
-              quote="This is a testimonial"
-              author="Zeq Tran"
-              role="CEO"
+              quote="Đây là đánh giá mẫu"
+              author="Nguyễn Văn A"
+              role="Giám đốc"
               avatarUrl="https://avatars.githubusercontent.com/u/124875024?v=4"
             />
           ),
         },
         {
-          label: "Pricing",
+          label: "Bảng giá",
           icon: <BadgeDollarSign className="w-4 h-4" />,
           element: (
             <NodePricing
-              title="Pro Plan"
-              price="$29"
-              benefits="Benefit 1, Benefit 2"
-              buttonText="Buy Now"
+              title="Gói Pro"
+              price="299.000đ"
+              benefits="Tính năng 1, Tính năng 2"
+              buttonText="Mua ngay"
             />
           ),
         },
         {
-          label: "CTA",
+          label: "Kêu gọi hành động",
           icon: <Megaphone className="w-4 h-4" />,
           element: (
             <NodeCTA
-              title="Call to Action"
-              subtitle="Subtitle here"
-              buttonText="Click Me"
+              title="Kêu gọi hành động"
+              subtitle="Mô tả ngắn tại đây"
+              buttonText="Bấm vào đây"
               buttonLink="#"
             />
           ),
         },
         {
-          label: "Stats",
+          label: "Thống kê",
           icon: <BarChart3 className="w-4 h-4" />,
-          element: <NodeStats stats="100+: Users, 99%: Satisfaction" />,
+          element: <NodeStats stats="100+: Người dùng, 99%: Hài lòng" />,
         },
         {
-          label: "Features",
+          label: "Tính năng",
           icon: <ListChecks className="w-4 h-4" />,
           element: (
-            <NodeFeatureList features="Feature 1: Description | Feature 2: Description" />
+            <NodeFeatureList features="Tính năng 1: Mô tả | Tính năng 2: Mô tả" />
           ),
         },
         {
-          label: "Social",
+          label: "Mạng xã hội",
           icon: <Share2 className="w-4 h-4" />,
           element: (
             <NodeSocialIcons
@@ -398,17 +396,13 @@ export const Toolbox = () => {
       ],
     },
     {
-      name: "Pre-built",
+      name: "Có sẵn",
       items: [
         {
-          label: "Card",
+          label: "Thẻ",
           icon: <CreditCard className="w-4 h-4" />,
           element: (
-            <NodeCard
-              title="Card Title"
-              description="Card description"
-              imageUrl=""
-            />
+            <NodeCard title="Tiêu đề thẻ" description="Mô tả thẻ" imageUrl="" />
           ),
         },
         {
@@ -416,34 +410,36 @@ export const Toolbox = () => {
           icon: <Sparkles className="w-4 h-4" />,
           element: (
             <NodeHero
-              title="Build Amazing Websites"
-              subtitle="Create beautiful landing pages"
+              title="Xây dựng website tuyệt vời"
+              subtitle="Tạo trang đích đẹp mắt"
               backgroundImage=""
-              ctaText="Get Started"
+              ctaText="Bắt đầu ngay"
               ctaUrl="#"
             />
           ),
         },
         {
-          label: "Navbar",
+          label: "Thanh điều hướng",
           icon: <Navigation className="w-4 h-4" />,
           element: (
             <NodeNavbar
-              logo="MyBrand"
+              logo="Thương hiệu"
               links={[
-                { label: "Home", url: "#" },
-                { label: "About", url: "#" },
+                { label: "Trang chủ", url: "#" },
+                { label: "Giới thiệu", url: "#" },
               ]}
             />
           ),
         },
         {
-          label: "Footer",
+          label: "Chân trang",
           icon: <CircleArrowDown className="w-4 h-4" />,
-          element: <NodeFooter copyright="© 2026 MyBrand" socialLinks={[]} />,
+          element: (
+            <NodeFooter copyright="© 2026 Thương hiệu" socialLinks={[]} />
+          ),
         },
         {
-          label: "Gallery",
+          label: "Bộ sưu tập",
           icon: <LayoutGrid className="w-4 h-4" />,
           element: <NodeGallery images={[]} columns={2} gap={16} />,
         },
@@ -465,7 +461,7 @@ export const Toolbox = () => {
       <div className="relative">
         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search components..."
+          placeholder="Tìm thành phần..."
           className="pl-8 h-9 bg-muted/50"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -493,7 +489,7 @@ export const Toolbox = () => {
         ))}
         {filteredGroups.length === 0 && (
           <div className="p-4 text-center text-xs text-muted-foreground">
-            No components found
+            Không tìm thấy thành phần nào
           </div>
         )}
       </div>

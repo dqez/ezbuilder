@@ -27,7 +27,10 @@ export const SettingsPanel = () => {
 
   const handleDelete = () => {
     if (selected?.id) {
-      actions.delete(selected.id);
+      const confirmed = window.confirm("Bạn có chắc muốn xóa thành phần này?");
+      if (confirmed) {
+        actions.delete(selected.id);
+      }
     }
   };
 
@@ -43,29 +46,21 @@ export const SettingsPanel = () => {
     return (
       <div className="p-4 space-y-6">
         <div>
-          <h3 className="font-medium mb-1">Global Settings</h3>
+          <h3 className="font-medium mb-1">Cài đặt chung</h3>
           <p className="text-sm text-muted-foreground">
-            Customize your site&apos;s theme and styles.
+            Tùy chỉnh giao diện và kiểu dáng trang web.
           </p>
         </div>
         <Separator />
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Theme Color (Primary)</Label>
+            <Label>Màu chủ đạo</Label>
             <div className="flex gap-2">
               <Input
                 type="color"
                 className="w-12 h-10 p-1 cursor-pointer"
                 onChange={(e) => {
-                  // This is a naive implementation for OKLCH or HSL.
-                  // CSS variables in globals.css might be complex.
-                  // For now, let's try setting --primary directly to hex?
-                  // Tailwind v4 uses --color-primary: <color>.
-                  // But globals.css uses oklch.
-                  // If I set --primary: #hex, it overrides oklch if defined via @theme?
-                  // No, @theme maps --color-primary to var(--primary).
-                  // So setting --primary on :root works.
                   document.documentElement.style.setProperty(
                     "--primary",
                     e.target.value,
@@ -77,13 +72,13 @@ export const SettingsPanel = () => {
                 }}
               />
               <span className="text-xs text-muted-foreground self-center">
-                Click color picker
+                Bấm chọn màu
               </span>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label>Radius (rem)</Label>
+            <Label>Bo góc (rem)</Label>
             <Input
               type="number"
               step="0.1"
@@ -98,16 +93,16 @@ export const SettingsPanel = () => {
           </div>
 
           <div className="space-y-2">
-            <Label>Base Font Size</Label>
+            <Label>Cỡ chữ cơ bản</Label>
             <select
               className="w-full h-9 px-3 rounded-md border border-input bg-transparent text-sm"
               onChange={(e) => {
                 document.documentElement.style.fontSize = e.target.value;
               }}
             >
-              <option value="16px">16px (Default)</option>
-              <option value="14px">14px (Compact)</option>
-              <option value="18px">18px (Large)</option>
+              <option value="16px">16px (Mặc định)</option>
+              <option value="14px">14px (Nhỏ gọn)</option>
+              <option value="18px">18px (Lớn)</option>
             </select>
           </div>
         </div>
@@ -136,8 +131,8 @@ export const SettingsPanel = () => {
 
       <Tabs defaultValue="content" className="w-full">
         <TabsList className="w-full grid grid-cols-2">
-          <TabsTrigger value="content">Content</TabsTrigger>
-          <TabsTrigger value="style">Style</TabsTrigger>
+          <TabsTrigger value="content">Nội dung</TabsTrigger>
+          <TabsTrigger value="style">Kiểu dáng</TabsTrigger>
         </TabsList>
 
         <TabsContent value="content" className="space-y-4 mt-4">

@@ -1,7 +1,7 @@
 "use client";
 
-import { Editor, Frame, Element } from "@craftjs/core";
-import { useState, useEffect } from "react";
+import { Editor, Frame, Element, useEditor } from "@craftjs/core";
+import { useState, useEffect, useRef } from "react";
 import { EditorToolbar } from "./EditorToolbar";
 import { Toolbox } from "./Toolbox";
 import { SettingsPanel } from "./SettingsPanel";
@@ -12,12 +12,53 @@ import { RenderNode } from "./RenderNode";
 import { ShortcutsHandler } from "./ShortcutsHandler";
 import { AiChatPanel } from "../ai/AiChatPanel";
 import { useAiStore } from "@/lib/stores/ai-store";
+import { OnboardingTour, RestartTourButton } from "./OnboardingTour";
+import { CanvasEmptyState } from "./CanvasEmptyState";
 
 interface BuilderProps {
   initialData?: string | null;
   onSave?: (json: string) => void;
-  pageId: string; // Required for AI chat
+  pageId: string;
+  pageName?: string;
+  websiteId?: string;
+  isPublished?: boolean;
+  isPublishing?: boolean;
+  onPublish?: () => void;
 }
+
+const DataDeserializer = ({ initialData }: { initialData?: string | null }) => {
+  const { actions } = useEditor();
+  const initialLoadRef = useRef(false);
+
+  useEffect(() => {
+    if (initialData && !initialLoadRef.current) {
+      try {
+        const content = JSON.parse(initialData);
+        if (typeof content === "object" && "ROOT" in content) {
+          const rootNode = content.ROOT as Record<string, unknown>;
+          const isBackendDefault =
+            rootNode?.type &&
+            typeof rootNode.type === "object" &&
+            "resolvedName" in rootNode.type &&
+            (rootNode.type as { resolvedName: string }).resolvedName ===
+              "NodeContainer" &&
+            Array.isArray(rootNode.nodes) &&
+            rootNode.nodes.length === 0;
+
+          if (!isBackendDefault) {
+            actions.deserialize(initialData);
+          }
+        }
+        initialLoadRef.current = true;
+      } catch (e) {
+        console.error("Failed to load page content:", e);
+        initialLoadRef.current = true;
+      }
+    }
+  }, [initialData, actions]);
+
+  return null;
+};
 
 type DeviceType = "desktop" | "tablet" | "mobile";
 
@@ -27,9 +68,21 @@ const DEVICE_WIDTHS = {
   mobile: "375px",
 };
 
-export const Builder = ({ onSave, pageId }: BuilderProps) => {
+export const Builder = ({
+  onSave,
+  pageId,
+  pageName,
+  websiteId,
+  isPublished,
+  isPublishing,
+  onPublish,
+  initialData,
+}: BuilderProps) => {
   const [device, setDevice] = useState<DeviceType>("desktop");
   const [zoom, setZoom] = useState(1);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
+    "idle",
+  );
 
   // Keyboard shortcuts for undo/redo are handled by Craft.js automatically
   const [activeTab, setActiveTab] = useState<"components" | "layers">(
@@ -60,15 +113,21 @@ export const Builder = ({ onSave, pageId }: BuilderProps) => {
       onNodesChange={(query) => {
         // Auto-save debounced
         if (onSave) {
+          setSaveStatus("saving");
           const timer = setTimeout(() => {
             const json = query.serialize();
             onSave(json);
+            setSaveStatus("saved");
+            // Reset to idle after 2 seconds
+            setTimeout(() => setSaveStatus("idle"), 2000);
           }, 2000);
           return () => clearTimeout(timer);
         }
       }}
     >
+      <DataDeserializer initialData={initialData} />
       <ShortcutsHandler />
+      <OnboardingTour />
       <div className="flex flex-col h-screen bg-muted/30">
         {/* Toolbar */}
         <EditorToolbar
@@ -76,12 +135,22 @@ export const Builder = ({ onSave, pageId }: BuilderProps) => {
           currentDevice={device}
           zoom={zoom}
           onZoomChange={setZoom}
+          saveStatus={saveStatus}
+          restartTour={<RestartTourButton />}
+          onPublish={onPublish}
+          isPublished={isPublished}
+          isPublishing={isPublishing}
+          pageName={pageName}
+          websiteId={websiteId}
         />
 
         {/* Main Editor Area */}
         <div className="flex flex-1 overflow-hidden">
           {/* Left Sidebar - Toolbox & Layers */}
-          <aside className="w-64 bg-background border-r flex flex-col overflow-hidden">
+          <aside
+            data-tour="toolbox"
+            className="w-64 bg-background border-r flex flex-col overflow-hidden"
+          >
             <div className="flex flex-col h-full">
               <div className="p-2 border-b bg-background z-10">
                 <div className="w-full grid grid-cols-2 bg-muted p-1 rounded-lg">
@@ -93,7 +162,7 @@ export const Builder = ({ onSave, pageId }: BuilderProps) => {
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    Components
+                    Thành phần
                   </button>
                   <button
                     onClick={() => setActiveTab("layers")}
@@ -103,7 +172,7 @@ export const Builder = ({ onSave, pageId }: BuilderProps) => {
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    Layers
+                    Lớp
                   </button>
                 </div>
               </div>
@@ -121,7 +190,10 @@ export const Builder = ({ onSave, pageId }: BuilderProps) => {
           </aside>
 
           {/* Center - Canvas */}
-          <main className="flex-1 overflow-auto p-8 bg-muted/30">
+          <main
+            data-tour="canvas"
+            className="flex-1 overflow-auto p-8 bg-muted/30 relative"
+          >
             <div className="min-h-full flex items-start justify-center pb-20">
               <div
                 className="bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 origin-top"
@@ -144,13 +216,17 @@ export const Builder = ({ onSave, pageId }: BuilderProps) => {
                 </Frame>
               </div>
             </div>
+            <CanvasEmptyState />
           </main>
 
           {/* Right Sidebar - Settings */}
-          <aside className="w-72 bg-background border-l flex flex-col overflow-hidden">
+          <aside
+            data-tour="settings"
+            className="w-72 bg-background border-l flex flex-col overflow-hidden"
+          >
             <div className="p-4 border-b">
               <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
-                Properties
+                Thuộc tính
               </h2>
             </div>
             <div className="flex-1 overflow-y-auto">
