@@ -34,9 +34,9 @@ import {
   Share2,
   Search,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NodeText } from "./components/NodeText";
 import { NodeHeading } from "./components/NodeHeading";
 import { NodeImage } from "./components/NodeImage";
@@ -79,16 +79,18 @@ const ToolboxItem = ({ label, icon, element }: ToolboxItemProps) => {
   const { connectors } = useEditor();
 
   return (
-    <Button
-      variant="ghost"
-      className="w-full justify-start gap-3 h-10 px-3 cursor-grab"
+    <div
+      className="flex flex-col items-center justify-center gap-2 p-3 rounded-lg border bg-card hover:border-primary/50 hover:bg-primary/5 hover:text-primary cursor-grab transition-all text-center aspect-square shadow-sm"
       ref={(ref) => {
         if (ref) connectors.create(ref, element);
       }}
+      title="Kéo thả vào trang web"
     >
-      {icon}
-      <span className="text-sm">{label}</span>
-    </Button>
+      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-1">
+        {icon}
+      </div>
+      <span className="text-xs font-medium leading-tight">{label}</span>
+    </div>
   );
 };
 
@@ -445,6 +447,61 @@ export const Toolbox = () => {
         },
       ],
     },
+    {
+      name: "Mẫu kết hợp",
+      items: [
+        {
+          label: "Hero + Tóm tắt",
+          icon: <PanelTop className="w-4 h-4" />,
+          element: (
+            <Element
+              canvas
+              is={NodeContainer}
+              padding={0}
+              gap={0}
+              backgroundColor="transparent"
+              flexDirection="column"
+            >
+              <NodeHero
+                title="Bắt đầu hành trình mới"
+                subtitle="Nền tảng giúp bạn xây dựng ứng dụng với AI."
+                ctaText="Dùng thử miễn phí"
+                ctaUrl="#"
+                backgroundImage=""
+              />
+              <NodeStats stats="10M+: Người dùng, 99%: Hài lòng, 24/7: Hỗ trợ" />
+            </Element>
+          ),
+        },
+        {
+          label: "Bảng giá + Đánh giá",
+          icon: <BadgeDollarSign className="w-4 h-4" />,
+          element: (
+            <Element
+              canvas
+              is={NodeContainer}
+              padding={0}
+              gap={32}
+              backgroundColor="transparent"
+              flexDirection="column"
+            >
+              <NodePricing
+                title="Gói Cao cấp"
+                price="999.000đ/tháng"
+                benefits="Tính năng 1, Tính năng 2, Tính năng 3"
+                buttonText="Đăng ký ngay"
+              />
+              <NodeTestimonial
+                quote="Sản phẩm này đã thay đổi cách chúng tôi làm việc."
+                author="Trần Văn B"
+                role="CEO, Công ty Tech"
+                avatarUrl="https://avatars.githubusercontent.com/u/124875024?v=4"
+              />
+            </Element>
+          ),
+        },
+      ],
+    },
   ];
 
   const filteredGroups = groups
@@ -456,43 +513,85 @@ export const Toolbox = () => {
     }))
     .filter((group) => group.items.length > 0);
 
+  const basicGroups = filteredGroups.filter(
+    (g) => !["Biểu mẫu", "Bố cục", "Mẫu kết hợp"].includes(g.name),
+  );
+  const advancedGroups = filteredGroups.filter((g) =>
+    ["Biểu mẫu", "Bố cục"].includes(g.name),
+  );
+  const sectionGroups = filteredGroups.filter((g) =>
+    ["Mẫu kết hợp"].includes(g.name),
+  );
+
+  const renderGroups = (groupsToRender: typeof filteredGroups) => {
+    if (groupsToRender.length === 0) {
+      return (
+        <div className="p-4 text-center text-xs text-muted-foreground">
+          Không tìm thấy thành phần nào
+        </div>
+      );
+    }
+    return (
+      <div className="space-y-4">
+        {groupsToRender.map((group) => (
+          <div key={group.name} className="space-y-2">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
+              {group.name}
+            </span>
+            <div className="grid grid-cols-2 gap-2">
+              {group.items.map((item) => (
+                <ToolboxItem
+                  key={item.label}
+                  label={item.label}
+                  icon={item.icon}
+                  element={item.element}
+                />
+              ))}
+            </div>
+            <Separator className="my-4 hidden last:block" />
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
-    <div className="p-2 space-y-4">
-      <div className="relative">
-        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+    <div className="p-4 space-y-4 flex flex-col h-full overflow-hidden">
+      <div className="relative shrink-0">
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Tìm thành phần..."
-          className="pl-8 h-9 bg-muted/50"
+          className="pl-9 h-9 bg-muted/50 rounded-lg text-sm"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
-      <div className="space-y-1">
-        {filteredGroups.map((group) => (
-          <div key={group.name}>
-            <div className="px-2 py-1.5">
-              <span className="text-xs font-medium text-muted-foreground">
-                {group.name}
-              </span>
-            </div>
-            {group.items.map((item) => (
-              <ToolboxItem
-                key={item.label}
-                label={item.label}
-                icon={item.icon}
-                element={item.element}
-              />
-            ))}
-            <Separator className="my-3 hidden last:block" />
-          </div>
-        ))}
-        {filteredGroups.length === 0 && (
-          <div className="p-4 text-center text-xs text-muted-foreground">
-            Không tìm thấy thành phần nào
-          </div>
-        )}
-      </div>
+      <Tabs defaultValue="basic" className="flex-1 flex flex-col min-h-0">
+        <TabsList className="w-full grid grid-cols-3 mb-4 shrink-0">
+          <TabsTrigger value="basic">Cơ bản</TabsTrigger>
+          <TabsTrigger value="advanced">Nâng cao</TabsTrigger>
+          <TabsTrigger value="sections">Mẫu khối</TabsTrigger>
+        </TabsList>
+        <TabsContent
+          value="basic"
+          className="flex-1 overflow-y-auto pr-1 pb-20"
+        >
+          {renderGroups(basicGroups)}
+        </TabsContent>
+        <TabsContent
+          value="advanced"
+          className="flex-1 overflow-y-auto pr-1 pb-20"
+        >
+          {renderGroups(advancedGroups)}
+        </TabsContent>
+        <TabsContent
+          value="sections"
+          className="flex-1 overflow-y-auto pr-1 pb-20"
+        >
+          {renderGroups(sectionGroups)}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

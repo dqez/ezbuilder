@@ -192,11 +192,16 @@ export const Builder = ({
           {/* Center - Canvas */}
           <main
             data-tour="canvas"
-            className="flex-1 overflow-auto p-8 bg-muted/30 relative"
+            className="flex-1 overflow-auto p-8 bg-muted/20 relative"
+            style={{
+              backgroundImage: `radial-gradient(circle, var(--border) 1px, transparent 1px)`,
+              backgroundSize: "24px 24px",
+              backgroundPosition: "0 0",
+            }}
           >
             <div className="min-h-full flex items-start justify-center pb-20">
               <div
-                className="bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 origin-top"
+                className="bg-white shadow-xl rounded-lg overflow-hidden transition-all duration-300 origin-top ring-1 ring-border"
                 style={{
                   width: DEVICE_WIDTHS[device],
                   maxWidth: "100%",
