@@ -34,12 +34,8 @@ export default function EditorPage() {
 
   const handleSave = useCallback(
     async (contentStr: string) => {
-      try {
-        const content = JSON.parse(contentStr);
-        await pagesApi.update(pageId, { content });
-      } catch (e) {
-        console.error("Failed to save:", e);
-      }
+      const content = JSON.parse(contentStr);
+      await pagesApi.update(pageId, { content });
     },
     [pageId],
   );

@@ -92,6 +92,8 @@ export const Builder = ({
   );
 
   const togglePanel = useAiStore((state) => state.togglePanel);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isDirtyRef = useRef(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -102,8 +104,24 @@ export const Builder = ({
       }
     };
 
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirtyRef.current) {
+        e.preventDefault();
+        e.returnValue = "Bạn có thay đổi chưa lưu. Bạn có chắc muốn rời đi?";
+        return e.returnValue;
+      }
+    };
+
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
   }, [togglePanel]);
 
   // Keyboard shortcuts managed by ShortcutsHandler component inside Editor context
@@ -115,15 +133,27 @@ export const Builder = ({
       onNodesChange={(query) => {
         // Auto-save debounced
         if (onSave) {
+          isDirtyRef.current = true;
+
+          if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
+          }
+
           setSaveStatus("saving");
-          const timer = setTimeout(() => {
-            const json = query.serialize();
-            onSave(json);
-            setSaveStatus("saved");
-            // Reset to idle after 2 seconds
-            setTimeout(() => setSaveStatus("idle"), 2000);
-          }, 2000);
-          return () => clearTimeout(timer);
+
+          saveTimeoutRef.current = setTimeout(async () => {
+            try {
+              const json = query.serialize();
+              await onSave(json);
+              isDirtyRef.current = false;
+              setSaveStatus("saved");
+              // Reset to idle after 2 seconds
+              setTimeout(() => setSaveStatus("idle"), 2000);
+            } catch (error) {
+              console.error("Auto-save failed:", error);
+              setSaveStatus("idle");
+            }
+          }, 1000); // Debounce for 1 second
         }
       }}
     >
