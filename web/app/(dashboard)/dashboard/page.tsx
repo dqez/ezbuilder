@@ -83,6 +83,17 @@ export default function DashboardPage() {
     }
   };
 
+  const handleDeleteWebsite = async (id: string) => {
+    const confirmed = window.confirm("Bạn có chắc muốn xóa website này?");
+    if (!confirmed) return;
+    try {
+      await websitesApi.delete(id);
+      setWebsites((prev) => prev.filter((w) => w.id !== id));
+    } catch {
+      setError("Không thể xóa website");
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20 min-h-[60vh]">
@@ -150,7 +161,11 @@ export default function DashboardPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredWebsites.map((website) => (
-              <WebsiteCard key={website.id} website={website} />
+              <WebsiteCard
+                key={website.id}
+                website={website}
+                onDelete={handleDeleteWebsite}
+              />
             ))}
           </div>
         )}

@@ -2,8 +2,16 @@ export interface Template {
   id: string;
   name: string;
   description: string;
-  thumbnail?: string; // Optional for now
-  data: Record<string, unknown>; // Parsed JSON object, not string
+  category: "blank" | "portfolio" | "business" | "blog" | "ecommerce" | "event";
+  thumbnail?: string;
+  /** Hệ màu để render SVG thumbnail preview */
+  colors: {
+    primary: string; // Hero/header bg
+    secondary: string; // Accent section
+    text: string; // Main text color
+    bg: string; // Page background
+  };
+  data: Record<string, unknown>;
 }
 
 // Helper to create a basic text node
@@ -86,7 +94,13 @@ export const TEMPLATES: Template[] = [
     id: "blank",
     name: "Trang Trắng",
     description: "Bắt đầu với một trang trắng hoàn toàn.",
-    thumbnail: "/templates/blank.png", // We'll add images later
+    category: "blank",
+    colors: {
+      primary: "#e5e7eb",
+      secondary: "#f9fafb",
+      text: "#6b7280",
+      bg: "#ffffff",
+    },
     data: {
       ROOT: BASE_ROOT,
     },
@@ -97,6 +111,13 @@ export const TEMPLATES: Template[] = [
     description:
       "Mẫu portfolio chuyên nghiệp để giới thiệu bản thân và các dự án.",
     thumbnail: "/templates/portfolio.png",
+    category: "portfolio",
+    colors: {
+      primary: "#111827",
+      secondary: "#f3f4f6",
+      text: "#ffffff",
+      bg: "#ffffff",
+    },
     data: {
       ROOT: {
         ...BASE_ROOT,
@@ -170,7 +191,13 @@ export const TEMPLATES: Template[] = [
     id: "landing-page",
     name: "Landing Page",
     description: "Trang đích hoàn hảo để giới thiệu sản phẩm hoặc dịch vụ mới.",
-    thumbnail: "/templates/landing.png",
+    category: "business",
+    colors: {
+      primary: "#2563eb",
+      secondary: "#f9fafb",
+      text: "#ffffff",
+      bg: "#ffffff",
+    },
     data: {
       ROOT: {
         ...BASE_ROOT,
@@ -234,7 +261,13 @@ export const TEMPLATES: Template[] = [
     id: "business",
     name: "Doanh Nghiệp",
     description: "Trang web chuyên nghiệp dành cho công ty và tổ chức.",
-    thumbnail: "/templates/business.png",
+    category: "business",
+    colors: {
+      primary: "#1e40af",
+      secondary: "#f3f4f6",
+      text: "#ffffff",
+      bg: "#ffffff",
+    },
     data: {
       ROOT: {
         ...BASE_ROOT,
@@ -301,7 +334,13 @@ export const TEMPLATES: Template[] = [
     id: "blog",
     name: "Blog Cá Nhân",
     description: "Chia sẻ câu chuyện và ý tưởng của bạn với thế giới.",
-    thumbnail: "/templates/blog.png",
+    category: "blog",
+    colors: {
+      primary: "#f59e0b",
+      secondary: "#fef3c7",
+      text: "#111827",
+      bg: "#ffffff",
+    },
     data: {
       ROOT: {
         ...BASE_ROOT,
@@ -384,7 +423,13 @@ export const TEMPLATES: Template[] = [
     id: "ecommerce",
     name: "Cửa Hàng Online",
     description: "Bắt đầu kinh doanh trực tuyến với mẫu cửa hàng hiện đại.",
-    thumbnail: "/templates/ecommerce.png",
+    category: "ecommerce",
+    colors: {
+      primary: "#1f2937",
+      secondary: "#f3f4f6",
+      text: "#ffffff",
+      bg: "#ffffff",
+    },
     data: {
       ROOT: {
         ...BASE_ROOT,
@@ -440,7 +485,13 @@ export const TEMPLATES: Template[] = [
     id: "event",
     name: "Sự Kiện",
     description: "Quảng bá sự kiện, hội thảo hoặc webinar của bạn.",
-    thumbnail: "/templates/event.png",
+    category: "event",
+    colors: {
+      primary: "#4f46e5",
+      secondary: "#f9fafb",
+      text: "#ffffff",
+      bg: "#ffffff",
+    },
     data: {
       ROOT: {
         ...BASE_ROOT,

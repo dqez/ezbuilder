@@ -97,7 +97,7 @@ export default function WebsiteDetailPage() {
             <div>
               <h1 className="text-2xl font-bold">{website.name}</h1>
               <p className="text-muted-foreground">
-                {website.subdomain}.ezbuilder.local
+                /public/{website.subdomain}/home
               </p>
             </div>
           </div>
