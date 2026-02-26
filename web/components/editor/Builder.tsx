@@ -20,6 +20,7 @@ interface BuilderProps {
   onSave?: (json: string) => void;
   pageId: string;
   pageName?: string;
+  pageSlug?: string;
   websiteId?: string;
   isPublished?: boolean;
   isPublishing?: boolean;
@@ -72,6 +73,7 @@ export const Builder = ({
   onSave,
   pageId,
   pageName,
+  pageSlug,
   websiteId,
   isPublished,
   isPublishing,
@@ -141,6 +143,7 @@ export const Builder = ({
           isPublished={isPublished}
           isPublishing={isPublishing}
           pageName={pageName}
+          pageSlug={pageSlug}
           websiteId={websiteId}
         />
 

@@ -84,6 +84,7 @@ export default function EditorPage() {
     <Builder
       pageId={pageId}
       pageName={page.name}
+      pageSlug={page.slug}
       websiteId={page.websiteId}
       isPublished={page.isPublished}
       isPublishing={publishing}

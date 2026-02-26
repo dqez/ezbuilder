@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { useEditor } from "@craftjs/core";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +26,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { PublishWizardDialog } from "./PublishWizardDialog";
 
 type SaveStatus = "idle" | "saving" | "saved";
 
@@ -38,6 +41,7 @@ interface EditorToolbarProps {
   isPublished?: boolean;
   isPublishing?: boolean;
   pageName?: string;
+  pageSlug?: string;
   websiteId?: string;
 }
 
@@ -52,8 +56,10 @@ export const EditorToolbar = ({
   isPublished,
   isPublishing,
   pageName,
+  pageSlug,
   websiteId,
 }: EditorToolbarProps) => {
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
   const { actions, canUndo, canRedo } = useEditor((state, query) => ({
     canUndo: query.history.canUndo(),
     canRedo: query.history.canRedo(),
@@ -245,26 +251,40 @@ export const EditorToolbar = ({
           </Button>
 
           {onPublish && (
-            <Button
-              variant={isPublished ? "outline" : "default"}
-              size="sm"
-              onClick={onPublish}
-              disabled={isPublishing}
-            >
-              {isPublishing ? (
-                <Loader2 className="w-4 h-4 animate-spin mr-1" />
-              ) : isPublished ? (
-                <>
-                  <EyeOff className="w-4 h-4 mr-1" />
-                  Hủy xuất bản
-                </>
-              ) : (
-                <>
-                  <Upload className="w-4 h-4 mr-1" />
-                  Xuất bản
-                </>
-              )}
-            </Button>
+            <>
+              <Button
+                variant={isPublished ? "outline" : "default"}
+                size="sm"
+                onClick={() =>
+                  isPublished ? onPublish() : setIsWizardOpen(true)
+                }
+                disabled={isPublishing}
+              >
+                {isPublishing ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                ) : isPublished ? (
+                  <>
+                    <EyeOff className="w-4 h-4 mr-1" />
+                    Hủy xuất bản
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4 mr-1" />
+                    Xuất bản
+                  </>
+                )}
+              </Button>
+              <PublishWizardDialog
+                isOpen={isWizardOpen}
+                onClose={() => setIsWizardOpen(false)}
+                onConfirm={onPublish}
+                isPublishing={!!isPublishing}
+                isPublished={!!isPublished}
+                websiteId={websiteId}
+                pageName={pageName}
+                pageSlug={pageSlug}
+              />
+            </>
           )}
         </div>
       </div>
