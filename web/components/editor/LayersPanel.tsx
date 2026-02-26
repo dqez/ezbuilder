@@ -90,7 +90,7 @@ export const LayersPanel = () => {
 
   if (!rootNode)
     return (
-      <div className="p-4 text-xs text-muted-foreground">No layers found</div>
+      <div className="p-4 text-xs text-muted-foreground">Chưa có lớp nào</div>
     );
 
   return (
