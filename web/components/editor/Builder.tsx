@@ -92,8 +92,14 @@ export const Builder = ({
   );
 
   const togglePanel = useAiStore((state) => state.togglePanel);
+  const setCurrentPageId = useAiStore((state) => state.setCurrentPageId);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isDirtyRef = useRef(false);
+
+  // Store pageId so RenderNode (CraftJS subtree) can access it without prop drilling
+  useEffect(() => {
+    setCurrentPageId(pageId);
+  }, [pageId, setCurrentPageId]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
