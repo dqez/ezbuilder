@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { isAuthenticated, isLoading, user, logout } = useAuthStore();
 
   useEffect(() => {
@@ -39,6 +40,12 @@ export default function DashboardLayout({
   // Don't render if not authenticated (redirect in progress)
   if (!isAuthenticated) {
     return null;
+  }
+
+  const isEditorPage = pathname?.startsWith("/editor");
+
+  if (isEditorPage) {
+    return <>{children}</>;
   }
 
   return (

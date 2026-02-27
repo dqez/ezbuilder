@@ -29,8 +29,15 @@ interface AiState {
   isPanelOpen: boolean;
   templates: AiPromptTemplate[];
 
+  // Inline chat state (one-shot per node)
+  inlineNodeId: string | null;
+  currentPageId: string | null;
+  setCurrentPageId: (pageId: string) => void;
+
   // Actions
   togglePanel: () => void;
+  openInlineChat: (nodeId: string) => void;
+  closeInlineChat: () => void;
   addMessage: (message: AiMessage) => void;
   appendToLastMessage: (chunk: string) => void;
   addActionToLastMessage: (action: {
@@ -53,6 +60,9 @@ export const useAiStore = create<AiState>((set) => ({
   isStreaming: false,
   isPanelOpen: false,
   templates: [],
+  inlineNodeId: null,
+  currentPageId: null,
+  setCurrentPageId: (pageId) => set({ currentPageId: pageId }),
 
   fetchTemplates: async () => {
     try {
@@ -64,6 +74,9 @@ export const useAiStore = create<AiState>((set) => ({
   },
 
   togglePanel: () => set((state) => ({ isPanelOpen: !state.isPanelOpen })),
+
+  openInlineChat: (nodeId) => set({ inlineNodeId: nodeId }),
+  closeInlineChat: () => set({ inlineNodeId: null }),
 
   loadChat: async (chatId: string) => {
     try {

@@ -41,12 +41,12 @@ export function PageCard({ page, subdomain }: PageCardProps) {
           {page.isPublished ? (
             <span className="flex items-center gap-1 text-xs text-green-600">
               <CheckCircle className="w-3 h-3" />
-              Published
+              Đã xuất bản
             </span>
           ) : (
             <span className="flex items-center gap-1 text-xs text-muted-foreground">
               <XCircle className="w-3 h-3" />
-              Draft
+              Bản nháp
             </span>
           )}
         </div>
@@ -73,7 +73,7 @@ export function PageCard({ page, subdomain }: PageCardProps) {
           <Button asChild size="sm">
             <Link href={`/editor/${page.id}`}>
               <Edit className="w-3 h-3 mr-1" />
-              Edit
+              Chỉnh sửa
             </Link>
           </Button>
         </div>
