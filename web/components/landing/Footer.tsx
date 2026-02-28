@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Github, Twitter, Linkedin } from "lucide-react";
+import { MailIcon } from "lucide-react";
 import { APP_NAME } from "@/lib/constants";
 
 export function Footer() {
@@ -23,22 +23,11 @@ export function Footer() {
             </p>
             <div className="flex gap-4">
               <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
+                href="mailto:trandinhquy04@gmail.com"
+                className="text-muted-foreground hover:text-foreground flex items-center gap-2"
               >
-                <Twitter className="w-5 h-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <Github className="w-5 h-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <Linkedin className="w-5 h-5" />
+                <MailIcon className="w-5 h-5" />
+                <span className="text-sm">Liên hệ với tôi</span>
               </Link>
             </div>
           </div>
