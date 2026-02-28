@@ -1,6 +1,6 @@
 # EZBuilder
 
-> An advanced AI-powered website builder platform that allows users to create stunning websites through intuitive drag-and-drop mechanics and generative AI.
+> An advanced AI-powered website builder platform designed specifically for non-technical users, featuring intuitive drag-and-drop mechanics and contextual generative AI.
 
 ![EZBuilder Banner](./docs/images/banner.png)
 
@@ -33,40 +33,33 @@
   </tr>
 </table>
 
----
+## Features
 
-## Key Features
-
-- **Advanced Visual Editor**: Powered by Craft.js, enabling precise, flexible, and responsive component layout editing.
-- **AI-Powered Generation**: Built-in AI assistant integrated with Google Gen AI to generate website structures and polished designs from text prompts.
-- **Template Library**: Jumpstart your creation process with pre-designed, aesthetic templates.
+- **No-Code Friendly UI**: Localized interface with auto-save indicators, safe-delete confirmations, and an intelligent onboarding tour to eliminate the learning curve.
+- **Smart Visual Editor**: Powered by Craft.js, featuring a visual toolbox, pre-built structural blocks, and intuitive tuning sliders for spacing and layout.
+- **Context-Aware AI Assistant**: Integrated AI that suggests the next best steps based on your current page structure and content.
+- **Inline AI Chat**: Click on any specific element to instantly rewrite text, change colors, or redesign sections via quick natural language prompts.
+- **Global Style Editor**: Seamlessly switch brand colors, web typography (Google Fonts), and UI scales across the entire project.
+- **1-Click Publishing**: Automated subdomain generation and a smooth publishing wizard for instant website deployment.
 - **Project Dashboard**: A fully-featured dashboard with search, filtering, and responsive grid layouts to manage websites.
-- **Secure Authentication**: Robust authentication system combining JWT and Google Web Auth (SSO) with custom domain redirect support.
-- **Modern UI/UX**: Interfaces built with modern design principles utilizing Tailwind CSS v4, shadcn/ui, and Framer Motion.
-
----
 
 ## Tech Stack
 
 ### Frontend (`/web`)
 
-- **Core Strategy**: [Next.js](https://nextjs.org/) (React 19)
-- **Styling Engine**: Tailwind CSS v4, shadcn/ui, Framer Motion
-- **Editor Core**: [Craft.js](https://craft.js.org/)
-- **State Management**: Zustand
-- **Content Rendering**: react-markdown
+- **Core**: Next.js (React 19)
+- **Styling**: Tailwind CSS v4, shadcn/ui, Framer Motion
+- **Editor**: Craft.js
+- **State**: Zustand
 
 ### Backend (`/api`)
 
-- **Core Framework**: [NestJS](https://nestjs.com/) (Node.js 22)
-- **Database & Engine**: PostgreSQL with Prisma ORM
-- **AI Integration**: Vercel AI SDK & Google Generative AI
-- **Security & Auth**: Passport.js (JWT & Google OAuth2.0), bcrypt, helmet
-- **Validation**: Zod, class-transformer, class-validator
+- **Core**: NestJS (Node.js 22)
+- **Database**: PostgreSQL with Prisma ORM
+- **AI**: Vercel AI SDK & Google Generative AI
+- **Security & Auth**: Passport.js (JWT & Google OAuth2.0)
 
----
-
-## Getting Started
+## Quick Start
 
 ### Prerequisites
 
@@ -75,42 +68,35 @@
 - Google Gemini API Key
 - Google OAuth Client Credentials (for Auth)
 
-### 1. Backend Setup
+### 1. Setup Backend (`/api`)
 
-\`\`\`bash
+```bash
 cd api
 npm install
 
 # Setup your environment variables
-
 cp .env.example .env
 
 # Run database migrations
-
 npx prisma generate
 npx prisma db push # or npx prisma migrate dev
 
 # Start the development server
-
 npm run start:dev
-\`\`\`
+```
 
-### 2. Frontend Setup
+### 2. Setup Frontend (`/web`)
 
-\`\`\`bash
+```bash
 cd web
 npm install
 
 # Setup your environment variables
-
 cp .env.example .env
 
 # Start the development server
-
 npm run dev
-\`\`\`
-
----
+```
 
 ## License
 
